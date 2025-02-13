@@ -85,4 +85,5 @@ GeneratedFiles*/
 *.db-shm
 *.db-wal
 *.json
-/src/BlackBoneDrv/.vs
+
+/src/BrandenBoneDrv/.vs/BrandenBoneDrv/FileContentIndex/9f0dc36e-d043-47d1-a370-96df22641861.vsidx
