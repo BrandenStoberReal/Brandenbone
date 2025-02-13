@@ -1,6 +1,6 @@
-# Blackbone
+# Brandenbone
 
-### Windows memory hacking library
+### Windows memory hacking library - now with 100% more Branden
 
 ## Features
 
@@ -92,6 +92,6 @@
 - Visual C++ ATL (x86/x64) with Spectre Mitigations
 
 ## License
-Blackbone is licensed under the MIT License. Dependencies are under their respective licenses.
+Brandenbone is licensed under the MIT License. Dependencies are under their respective licenses.
 
 ![Library](https://github.com/DarthTon/Blackbone/workflows/Library/badge.svg?branch=master) ![Driver](https://github.com/DarthTon/Blackbone/workflows/Driver/badge.svg?branch=master)
