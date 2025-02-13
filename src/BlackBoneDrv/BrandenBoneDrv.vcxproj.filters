@@ -13,7 +13,7 @@
     <ClCompile Include="Inject.c">
       <Filter>ImageLoader</Filter>
     </ClCompile>
-    <ClCompile Include="BlackBoneDrv.c">
+    <ClCompile Include="BrandenBoneDrv.c">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Dispatch.c">
@@ -63,10 +63,10 @@
     <ClInclude Include="VadHelpers.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="BlackBoneDrv.h">
+    <ClInclude Include="BrandenBoneDrv.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="BlackBoneDef.h">
+    <ClInclude Include="BrandenBoneDef.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="NativeEnums.h">

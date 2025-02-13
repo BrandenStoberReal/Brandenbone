@@ -1,6 +1,6 @@
 #include "Private.h"
 #include "Loader.h"
-#include "BlackBoneDef.h"
+#include "BrandenBoneDef.h"
 #include "Utils.h"
 #include <Ntstrsafe.h>
 

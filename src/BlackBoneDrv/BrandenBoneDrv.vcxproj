@@ -270,6 +270,9 @@
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
+    <DriverSign>
+      <FileDigestAlgorithm>SHA256</FileDigestAlgorithm>
+    </DriverSign>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Win8 Release|x64'">
     <ClCompile>
@@ -290,7 +293,7 @@
     <FilesToPackage Include="@(Inf->'%(CopyOutput)')" Condition="'@(Inf)'!=''" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BlackBoneDrv.c" />
+    <ClCompile Include="BrandenBoneDrv.c" />
     <ClCompile Include="Dispatch.c" />
     <ClCompile Include="Inject.c" />
     <ClCompile Include="ldrreloc.c" />
@@ -305,8 +308,8 @@
     <ClCompile Include="VadRoutines.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BlackBoneDrv.h" />
-    <ClInclude Include="BlackBoneDef.h" />
+    <ClInclude Include="BrandenBoneDrv.h" />
+    <ClInclude Include="BrandenBoneDef.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Imports.h" />
     <ClInclude Include="Loader.h" />

@@ -1,7 +1,7 @@
 #include "Loader.h"
 #include "Private.h"
 #include "Routines.h"
-#include "BlackBoneDef.h"
+#include "BrandenBoneDef.h"
 #include "Utils.h"
 #include "apiset.h"
 #include <ntstrsafe.h>
