@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.Windows.WDK.x86.10.0.26100.2454\build\native\Microsoft.Windows.WDK.x86.props" Condition="Exists('packages\Microsoft.Windows.WDK.x86.10.0.26100.2454\build\native\Microsoft.Windows.WDK.x86.props')" />
+  <Import Project="packages\Microsoft.Windows.SDK.CPP.x86.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.x86.props" Condition="Exists('packages\Microsoft.Windows.SDK.CPP.x86.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.x86.props')" />
+  <Import Project="packages\Microsoft.Windows.WDK.x64.10.0.26100.2454\build\native\Microsoft.Windows.WDK.x64.props" Condition="Exists('packages\Microsoft.Windows.WDK.x64.10.0.26100.2454\build\native\Microsoft.Windows.WDK.x64.props')" />
+  <Import Project="packages\Microsoft.Windows.SDK.CPP.x64.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.x64.props" Condition="Exists('packages\Microsoft.Windows.SDK.CPP.x64.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.x64.props')" />
+  <Import Project="packages\Microsoft.Windows.SDK.CPP.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.props" Condition="Exists('packages\Microsoft.Windows.SDK.CPP.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Win10Debug|x64">
       <Configuration>Win10Debug</Configuration>
@@ -43,7 +48,7 @@
     <Platform Condition="'$(Platform)' == ''">Win32</Platform>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>BlackBoneDrv</ProjectName>
+    <ProjectName>BrandenBoneDrv</ProjectName>
   </PropertyGroup>
   <PropertyGroup Label="PropertySheets">
     <ConfigurationType>Driver</ConfigurationType>
@@ -191,6 +196,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <DriverSign>
+      <FileDigestAlgorithm>SHA256</FileDigestAlgorithm>
+    </DriverSign>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Win8 Debug|x64'">
     <ClCompile>
@@ -315,7 +323,22 @@
     <ClInclude Include="VadHelpers.h" />
     <ClInclude Include="VadRoutines.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.Windows.SDK.CPP.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.targets" Condition="Exists('packages\Microsoft.Windows.SDK.CPP.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Windows.SDK.CPP.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.SDK.CPP.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.SDK.CPP.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.SDK.CPP.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.SDK.CPP.x64.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.x64.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.SDK.CPP.x64.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.x64.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.WDK.x64.10.0.26100.2454\build\native\Microsoft.Windows.WDK.x64.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.WDK.x64.10.0.26100.2454\build\native\Microsoft.Windows.WDK.x64.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.SDK.CPP.x86.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.x86.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.SDK.CPP.x86.10.0.26100.2454\build\native\Microsoft.Windows.SDK.cpp.x86.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.WDK.x86.10.0.26100.2454\build\native\Microsoft.Windows.WDK.x86.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.WDK.x86.10.0.26100.2454\build\native\Microsoft.Windows.WDK.x86.props'))" />
+  </Target>
 </Project>
