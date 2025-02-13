@@ -85,3 +85,4 @@ GeneratedFiles*/
 *.db-shm
 *.db-wal
 *.json
+/src/BlackBoneDrv/.vs
