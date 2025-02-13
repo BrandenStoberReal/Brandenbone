@@ -19,4 +19,4 @@
 /// <param name="DeviceObject">Device object</param>
 /// <param name="Irp">IRP</param>
 /// <returns>Status code</returns>
-NTSTATUS BBDispatch( IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp );
+NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp);
