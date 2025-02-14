@@ -113,5 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="RandomizeSectionNamesAdvanced.ps1" />
   </ItemGroup>
 </Project>

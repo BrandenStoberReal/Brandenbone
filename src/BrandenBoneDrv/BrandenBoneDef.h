@@ -1,17 +1,17 @@
 #pragma once
 
-#define BrandenBone_DEVICE_NAME           L"BrandenBone"
-#define BrandenBone_DEVICE_FILE           L"\\\\.\\" BrandenBone_DEVICE_NAME
+#define BRANDENBONE_DEVICE_NAME           L"BrandenBone"
+#define BRANDENBONE_DEVICE_FILE           L"\\\\.\\" BRANDENBONE_DEVICE_NAME
 
-#define FILE_DEVICE_BrandenBone           0x8005
+#define FILE_DEVICE_BRANDENBONE           0x8005
 
-#define BrandenBone_FILE_EXT              L".sys"
-#define BrandenBone_FILE_SUFFIX           L"Drv"
-#define BrandenBone_FILE_NAME             BrandenBone_DEVICE_NAME BrandenBone_FILE_SUFFIX       BrandenBone_FILE_EXT
-#define BrandenBone_FILE_NAME_7           BrandenBone_DEVICE_NAME BrandenBone_FILE_SUFFIX L"7"  BrandenBone_FILE_EXT
-#define BrandenBone_FILE_NAME_8           BrandenBone_DEVICE_NAME BrandenBone_FILE_SUFFIX L"8"  BrandenBone_FILE_EXT
-#define BrandenBone_FILE_NAME_81          BrandenBone_DEVICE_NAME BrandenBone_FILE_SUFFIX L"81" BrandenBone_FILE_EXT
-#define BrandenBone_FILE_NAME_10          BrandenBone_DEVICE_NAME BrandenBone_FILE_SUFFIX L"10" BrandenBone_FILE_EXT
+#define BRANDENBONE_FILE_EXT              L".sys"
+#define BRANDENBONE_FILE_SUFFIX           L"Drv"
+#define BRANDENBONE_FILE_NAME             BRANDENBONE_DEVICE_NAME BRANDENBONE_FILE_SUFFIX       BRANDENBONE_FILE_EXT
+#define BRANDENBONE_FILE_NAME_7           BRANDENBONE_DEVICE_NAME BRANDENBONE_FILE_SUFFIX L"7"  BRANDENBONE_FILE_EXT
+#define BRANDENBONE_FILE_NAME_8           BRANDENBONE_DEVICE_NAME BRANDENBONE_FILE_SUFFIX L"8"  BRANDENBONE_FILE_EXT
+#define BRANDENBONE_FILE_NAME_81          BRANDENBONE_DEVICE_NAME BRANDENBONE_FILE_SUFFIX L"81" BRANDENBONE_FILE_EXT
+#define BRANDENBONE_FILE_NAME_10          BRANDENBONE_DEVICE_NAME BRANDENBONE_FILE_SUFFIX L"10" BRANDENBONE_FILE_EXT
 
 /*
 	Disable process DEP
@@ -28,7 +28,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_DISABLE_DEP  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x800, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_DISABLE_DEP  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x800, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Change process protection state
@@ -45,7 +45,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_SET_PROTECTION  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x801, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_SET_PROTECTION  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x801, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Change handle access rights
@@ -62,7 +62,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_GRANT_ACCESS   (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x802, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_GRANT_ACCESS   (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x802, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Read or write virtual memory of target process
@@ -79,7 +79,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_COPY_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x803, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_COPY_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x803, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Allocate or free memory
@@ -96,7 +96,7 @@
 	Output size:
 		sizeof(ALLOCATE_FREE_MEMORY_RESULT)
 */
-#define IOCTL_BrandenBone_ALLOCATE_FREE_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x804, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_ALLOCATE_FREE_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x804, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Change protection of memory region
@@ -113,7 +113,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_PROTECT_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x805, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_PROTECT_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x805, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Map entire address space of target process into calling process
@@ -132,7 +132,7 @@
 		sizeof(ULONG) - if output buffer isn't large enough to hold output data
 		>= sizeof(MAP_MEMORY_REGION_RESULT) - if buffer is large enough to hold output data
 */
-#define IOCTL_BrandenBone_MAP_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x806, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_MAP_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x806, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Map single memory region into calling process
@@ -149,7 +149,7 @@
 	Output size:
 		sizeof(MAP_MEMORY_REGION_RESULT)
 */
-#define IOCTL_BrandenBone_MAP_REGION  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x807, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_MAP_REGION  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x807, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Unmap all mapped memory from calling process
@@ -166,7 +166,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_UNMAP_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x808, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_UNMAP_MEMORY  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x808, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Unmap single memory region from calling process
@@ -183,7 +183,7 @@
 	Output size:
 		sizeof(UNMAP_MEMORY_REGION_RESULT)
 */
-#define IOCTL_BrandenBone_UNMAP_REGION  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x809, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_UNMAP_REGION  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x809, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Unlink target VAD from process VAD tree
@@ -200,7 +200,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_HIDE_VAD  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x80A, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_HIDE_VAD  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x80A, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Inject dll into arbitrary process
@@ -217,7 +217,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_INJECT_DLL  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x80B, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_INJECT_DLL  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x80B, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Manually map system driver
@@ -234,7 +234,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_MAP_DRIVER  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x80C, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_MAP_DRIVER  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x80C, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 	Unlink process handle table from handle table list
@@ -251,7 +251,7 @@
 	Output size:
 		0
 */
-#define IOCTL_BrandenBone_UNLINK_HTABLE  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x80D, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_UNLINK_HTABLE  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x80D, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /*
 Map entire address space of target process into calling process
@@ -268,10 +268,10 @@ Map entire address space of target process into calling process
 	Output size:
 		>= sizeof(ENUM_REGIONS_RESULT)
 */
-#define IOCTL_BrandenBone_ENUM_REGIONS  (ULONG)CTL_CODE(FILE_DEVICE_BrandenBone, 0x80E, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
+#define IOCTL_BRANDENBONE_ENUM_REGIONS  (ULONG)CTL_CODE(FILE_DEVICE_BRANDENBONE, 0x80E, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_DISABLE_DEP
+/// Input for IOCTL_BRANDENBONE_DISABLE_DEP
 /// </summary>
 typedef struct _DISABLE_DEP
 {
@@ -289,7 +289,7 @@ typedef enum _PolicyOpt
 } PolicyOpt;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_SET_PROTECTION
+/// Input for IOCTL_BRANDENBONE_SET_PROTECTION
 /// </summary>
 typedef struct _SET_PROC_PROTECTION
 {
@@ -300,7 +300,7 @@ typedef struct _SET_PROC_PROTECTION
 } SET_PROC_PROTECTION, * PSET_PROC_PROTECTION;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_GRANT_ACCESS
+/// Input for IOCTL_BRANDENBONE_GRANT_ACCESS
 /// </summary>
 typedef struct _HANDLE_GRANT_ACCESS
 {
@@ -310,7 +310,7 @@ typedef struct _HANDLE_GRANT_ACCESS
 } HANDLE_GRANT_ACCESS, * PHANDLE_GRANT_ACCESS;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_COPY_MEMORY
+/// Input for IOCTL_BRANDENBONE_COPY_MEMORY
 /// </summary>
 typedef struct _COPY_MEMORY
 {
@@ -322,7 +322,7 @@ typedef struct _COPY_MEMORY
 } COPY_MEMORY, * PCOPY_MEMORY;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_ALLOCATE_FREE_MEMORY
+/// Input for IOCTL_BRANDENBONE_ALLOCATE_FREE_MEMORY
 /// </summary>
 typedef struct _ALLOCATE_FREE_MEMORY
 {
@@ -336,7 +336,7 @@ typedef struct _ALLOCATE_FREE_MEMORY
 } ALLOCATE_FREE_MEMORY, * PALLOCATE_FREE_MEMORY;
 
 /// <summary>
-/// Output for IOCTL_BrandenBone_ALLOCATE_FREE_MEMORY
+/// Output for IOCTL_BRANDENBONE_ALLOCATE_FREE_MEMORY
 /// </summary>
 typedef struct _ALLOCATE_FREE_MEMORY_RESULT
 {
@@ -345,7 +345,7 @@ typedef struct _ALLOCATE_FREE_MEMORY_RESULT
 } ALLOCATE_FREE_MEMORY_RESULT, * PALLOCATE_FREE_MEMORY_RESULT;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_PROTECT_MEMORY
+/// Input for IOCTL_BRANDENBONE_PROTECT_MEMORY
 /// </summary>
 typedef struct _PROTECT_MEMORY
 {
@@ -356,7 +356,7 @@ typedef struct _PROTECT_MEMORY
 } PROTECT_MEMORY, * PPROTECT_MEMORY;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_REMAP_MEMORY
+/// Input for IOCTL_BRANDENBONE_REMAP_MEMORY
 /// </summary>
 typedef struct _MAP_MEMORY
 {
@@ -376,7 +376,7 @@ typedef struct _MAP_MEMORY_RESULT_ENTRY
 } MAP_MEMORY_RESULT_ENTRY, * PMAP_MEMORY_RESULT_ENTRY;
 
 /// <summary>
-/// Output for IOCTL_BrandenBone_REMAP_REGION
+/// Output for IOCTL_BRANDENBONE_REMAP_REGION
 /// </summary>
 typedef struct _MAP_MEMORY_RESULT
 {
@@ -391,7 +391,7 @@ typedef struct _MAP_MEMORY_RESULT
 } MAP_MEMORY_RESULT, * PMAP_MEMORY_RESULT;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_REMAP_REGION
+/// Input for IOCTL_BRANDENBONE_REMAP_REGION
 /// </summary>
 typedef struct _MAP_MEMORY_REGION
 {
@@ -401,7 +401,7 @@ typedef struct _MAP_MEMORY_REGION
 } MAP_MEMORY_REGION, * PMAP_MEMORY_REGION;
 
 /// <summary>
-/// Output for IOCTL_BrandenBone_REMAP_REGION
+/// Output for IOCTL_BRANDENBONE_REMAP_REGION
 /// </summary>
 typedef struct _MAP_MEMORY_REGION_RESULT
 {
@@ -413,7 +413,7 @@ typedef struct _MAP_MEMORY_REGION_RESULT
 } MAP_MEMORY_REGION_RESULT, * PMAP_MEMORY_REGION_RESULT;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_UNMAP_MEMORY
+/// Input for IOCTL_BRANDENBONE_UNMAP_MEMORY
 /// </summary>
 typedef struct _UNMAP_MEMORY
 {
@@ -421,7 +421,7 @@ typedef struct _UNMAP_MEMORY
 } UNMAP_MEMORY, * PUNMAP_MEMORY;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_UNMAP_REGION
+/// Input for IOCTL_BRANDENBONE_UNMAP_REGION
 /// </summary>
 typedef struct _UNMAP_MEMORY_REGION
 {
@@ -431,7 +431,7 @@ typedef struct _UNMAP_MEMORY_REGION
 } UNMAP_MEMORY_REGION, * PUNMAP_MEMORY_REGION;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_HIDE_VAD
+/// Input for IOCTL_BRANDENBONE_HIDE_VAD
 /// </summary>
 typedef struct _HIDE_VAD
 {
@@ -462,7 +462,7 @@ typedef enum _MmapFlags
 } KMmapFlags;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_INJECT_DLL
+/// Input for IOCTL_BRANDENBONE_INJECT_DLL
 /// </summary>
 typedef struct _INJECT_DLL
 {
@@ -481,7 +481,7 @@ typedef struct _INJECT_DLL
 } INJECT_DLL, * PINJECT_DLL;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_MAP_DRIVER
+/// Input for IOCTL_BRANDENBONE_MAP_DRIVER
 /// </summary>
 typedef struct _MMAP_DRIVER
 {
@@ -489,7 +489,7 @@ typedef struct _MMAP_DRIVER
 } MMAP_DRIVER, * PMMAP_DRIVER;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_UNLINK_HTABLE
+/// Input for IOCTL_BRANDENBONE_UNLINK_HTABLE
 /// </summary>
 typedef struct _UNLINK_HTABLE
 {
@@ -497,7 +497,7 @@ typedef struct _UNLINK_HTABLE
 } UNLINK_HTABLE, * PUNLINK_HTABLE;
 
 /// <summary>
-/// Input for IOCTL_BrandenBone_ENUM_REGIONS
+/// Input for IOCTL_BRANDENBONE_ENUM_REGIONS
 /// </summary>
 typedef struct _ENUM_REGIONS
 {
@@ -516,7 +516,7 @@ typedef struct _MEM_REGION
 } MEM_REGION, * PMEM_REGION;
 
 /// <summary>
-/// Output for IOCTL_BrandenBone_ENUM_REGIONS
+/// Output for IOCTL_BRANDENBONE_ENUM_REGIONS
 /// </summary>
 typedef struct _ENUM_REGIONS_RESULT
 {

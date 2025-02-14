@@ -10,8 +10,8 @@
 #include "Routines.h"
 #include "Remap.h"
 
-#define DEVICE_NAME     L"\\Device\\"     ## BrandenBone_DEVICE_NAME
-#define DOS_DEVICE_NAME L"\\DosDevices\\" ## BrandenBone_DEVICE_NAME
+#define DEVICE_NAME     L"\\Device\\"     ## BRANDENBONE_DEVICE_NAME
+#define DOS_DEVICE_NAME L"\\DosDevices\\" ## BRANDENBONE_DEVICE_NAME
 
 /// <summary>
 /// CTL dispatcher

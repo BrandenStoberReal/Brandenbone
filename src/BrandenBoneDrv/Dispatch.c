@@ -39,7 +39,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 
 		switch (ioControlCode)
 		{
-		case IOCTL_BrandenBone_DISABLE_DEP:
+		case IOCTL_BRANDENBONE_DISABLE_DEP:
 		{
 			if (inputBufferLength >= sizeof(DISABLE_DEP) && ioBuffer)
 				Irp->IoStatus.Status = BBDisableDEP((PDISABLE_DEP)ioBuffer);
@@ -48,7 +48,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_SET_PROTECTION:
+		case IOCTL_BRANDENBONE_SET_PROTECTION:
 		{
 			if (inputBufferLength >= sizeof(SET_PROC_PROTECTION) && ioBuffer)
 				Irp->IoStatus.Status = BBSetProtection((PSET_PROC_PROTECTION)ioBuffer);
@@ -57,7 +57,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_GRANT_ACCESS:
+		case IOCTL_BRANDENBONE_GRANT_ACCESS:
 		{
 			if (inputBufferLength >= sizeof(HANDLE_GRANT_ACCESS) && ioBuffer)
 				Irp->IoStatus.Status = BBGrantAccess((PHANDLE_GRANT_ACCESS)ioBuffer);
@@ -66,7 +66,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_COPY_MEMORY:
+		case IOCTL_BRANDENBONE_COPY_MEMORY:
 		{
 			if (inputBufferLength >= sizeof(COPY_MEMORY) && ioBuffer)
 				Irp->IoStatus.Status = BBCopyMemory((PCOPY_MEMORY)ioBuffer);
@@ -75,7 +75,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_ALLOCATE_FREE_MEMORY:
+		case IOCTL_BRANDENBONE_ALLOCATE_FREE_MEMORY:
 		{
 			if (inputBufferLength >= sizeof(ALLOCATE_FREE_MEMORY) &&
 				outputBufferLength >= sizeof(ALLOCATE_FREE_MEMORY_RESULT) &&
@@ -95,7 +95,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_PROTECT_MEMORY:
+		case IOCTL_BRANDENBONE_PROTECT_MEMORY:
 		{
 			if (inputBufferLength >= sizeof(PROTECT_MEMORY) && ioBuffer)
 				Irp->IoStatus.Status = BBProtectMemory((PPROTECT_MEMORY)ioBuffer);
@@ -104,7 +104,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_MAP_MEMORY:
+		case IOCTL_BRANDENBONE_MAP_MEMORY:
 		{
 			if (inputBufferLength >= sizeof(MAP_MEMORY) && ioBuffer && outputBufferLength >= sizeof(ULONG))
 			{
@@ -157,7 +157,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_MAP_REGION:
+		case IOCTL_BRANDENBONE_MAP_REGION:
 		{
 			if (inputBufferLength >= sizeof(MAP_MEMORY_REGION) &&
 				outputBufferLength >= sizeof(MAP_MEMORY_REGION_RESULT) && ioBuffer)
@@ -176,7 +176,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_UNMAP_MEMORY:
+		case IOCTL_BRANDENBONE_UNMAP_MEMORY:
 		{
 			if (inputBufferLength >= sizeof(UNMAP_MEMORY) && ioBuffer)
 				Irp->IoStatus.Status = BBUnmapMemory((PUNMAP_MEMORY)ioBuffer);
@@ -185,7 +185,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_UNMAP_REGION:
+		case IOCTL_BRANDENBONE_UNMAP_REGION:
 		{
 			if (inputBufferLength >= sizeof(UNMAP_MEMORY_REGION) && ioBuffer)
 				Irp->IoStatus.Status = BBUnmapMemoryRegion((PUNMAP_MEMORY_REGION)ioBuffer);
@@ -194,7 +194,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_HIDE_VAD:
+		case IOCTL_BRANDENBONE_HIDE_VAD:
 		{
 			if (inputBufferLength >= sizeof(HIDE_VAD) && ioBuffer)
 				Irp->IoStatus.Status = BBHideVAD((PHIDE_VAD)ioBuffer);
@@ -203,7 +203,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_INJECT_DLL:
+		case IOCTL_BRANDENBONE_INJECT_DLL:
 		{
 			if (inputBufferLength >= sizeof(INJECT_DLL) && ioBuffer)
 				Irp->IoStatus.Status = BBInjectDll((PINJECT_DLL)ioBuffer);
@@ -212,7 +212,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_MAP_DRIVER:
+		case IOCTL_BRANDENBONE_MAP_DRIVER:
 		{
 			if (inputBufferLength >= sizeof(MMAP_DRIVER) && ioBuffer)
 			{
@@ -228,7 +228,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_UNLINK_HTABLE:
+		case IOCTL_BRANDENBONE_UNLINK_HTABLE:
 		{
 			if (inputBufferLength >= sizeof(UNLINK_HTABLE) && ioBuffer)
 				Irp->IoStatus.Status = BBUnlinkHandleTable((PUNLINK_HTABLE)ioBuffer);
@@ -237,7 +237,7 @@ NTSTATUS BBDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 		}
 		break;
 
-		case IOCTL_BrandenBone_ENUM_REGIONS:
+		case IOCTL_BRANDENBONE_ENUM_REGIONS:
 		{
 			if (inputBufferLength >= sizeof(ENUM_REGIONS) && outputBufferLength >= sizeof(ENUM_REGIONS_RESULT) && ioBuffer)
 			{

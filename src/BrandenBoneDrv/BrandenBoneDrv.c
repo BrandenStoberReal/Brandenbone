@@ -62,7 +62,7 @@ NTSTATUS DriverEntry(IN PDRIVER_OBJECT DriverObject, IN PUNICODE_STRING Registry
 
 	RtlUnicodeStringInit(&deviceName, DEVICE_NAME);
 
-	status = IoCreateDevice(DriverObject, 0, &deviceName, FILE_DEVICE_BrandenBone, 0, FALSE, &deviceObject);
+	status = IoCreateDevice(DriverObject, 0, &deviceName, FILE_DEVICE_BRANDENBONE, 0, FALSE, &deviceObject);
 	if (!NT_SUCCESS(status))
 	{
 		DPRINT("BrandenBone: %s: IoCreateDevice failed with status 0x%X\n", __FUNCTION__, status);
