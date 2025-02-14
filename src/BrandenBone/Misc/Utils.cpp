@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <random>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>

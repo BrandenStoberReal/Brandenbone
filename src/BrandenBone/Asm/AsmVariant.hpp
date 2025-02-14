@@ -9,7 +9,7 @@
 #include <vector>
 
 
-namespace blackbone
+namespace BrandenBone
 {
 /// <summary>
 /// General purpose assembly variable
@@ -111,51 +111,51 @@ struct AsmVariant
         , size( size_ )
         , imm_val64( reinterpret_cast<uint64_t>(ptr) ) { }
 
-    BLACKBONE_API AsmVariant( float _imm_fpu )
+    BRANDENBONE_API AsmVariant( float _imm_fpu )
         : type( imm_float )
         , size( sizeof( float ) )
         , imm_float_val( _imm_fpu ) { }
 
-    BLACKBONE_API AsmVariant( double _imm_fpu )
+    BRANDENBONE_API AsmVariant( double _imm_fpu )
         : type( imm_double )
         , size( sizeof( double ) )
         , imm_double_val( _imm_fpu ) { }
 
-    BLACKBONE_API AsmVariant( asmjit::GpReg _reg )
+    BRANDENBONE_API AsmVariant( asmjit::GpReg _reg )
         : type( reg )
         , size( sizeof( uintptr_t ) )
         , reg_val( _reg ) { }
 
     // Stack variable
-    BLACKBONE_API AsmVariant( asmjit::Mem _mem )
+    BRANDENBONE_API AsmVariant( asmjit::Mem _mem )
         : type( mem )
         , size( sizeof( uintptr_t ) )
         , mem_val( _mem ) { }
 
     // Pointer to stack address
-    BLACKBONE_API AsmVariant( asmjit::Mem* _mem )
+    BRANDENBONE_API AsmVariant( asmjit::Mem* _mem )
         : type( mem_ptr )
         , size( sizeof( uintptr_t ) )
         , mem_val( *_mem ) { }
 
-    BLACKBONE_API AsmVariant( const asmjit::Mem* _mem )
+    BRANDENBONE_API AsmVariant( const asmjit::Mem* _mem )
         : AsmVariant( const_cast<asmjit::Mem*>(_mem) ) { }
 
-    BLACKBONE_API AsmVariant( const AsmVariant& ) = default;
-    BLACKBONE_API AsmVariant( AsmVariant&& ) = default;
-    BLACKBONE_API AsmVariant& operator =( const AsmVariant& ) = default;
+    BRANDENBONE_API AsmVariant( const AsmVariant& ) = default;
+    BRANDENBONE_API AsmVariant( AsmVariant&& ) = default;
+    BRANDENBONE_API AsmVariant& operator =( const AsmVariant& ) = default;
 
     //
     // Get floating point value as raw data
     //
-    BLACKBONE_API inline uint32_t getImm_float()  const { return *(reinterpret_cast<const uint32_t*>(&imm_float_val)); }
-    BLACKBONE_API inline uint64_t getImm_double() const { return *(reinterpret_cast<const uint64_t*>(&imm_double_val)); }
+    BRANDENBONE_API inline uint32_t getImm_float()  const { return *(reinterpret_cast<const uint32_t*>(&imm_float_val)); }
+    BRANDENBONE_API inline uint64_t getImm_double() const { return *(reinterpret_cast<const uint64_t*>(&imm_double_val)); }
 
     /// <summary>
     /// Check if argument can be passed in x86 register
     /// </summary>
     /// <returns>true if can</returns>
-    BLACKBONE_API inline bool reg86Compatible() const
+    BRANDENBONE_API inline bool reg86Compatible() const
     {
         if (type == dataStruct || type == imm_float || type == imm_double || type == structRet)
             return false;

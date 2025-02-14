@@ -19,7 +19,7 @@
 #define ADDR_MASK 0xFFFFF000
 #endif
 
-namespace blackbone
+namespace BrandenBone
 {
 
 TraceHook::TraceHook()

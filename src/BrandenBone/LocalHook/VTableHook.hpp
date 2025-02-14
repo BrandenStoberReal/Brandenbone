@@ -3,7 +3,7 @@
 #include "LocalHook.hpp"
 #include "../Misc/DynImport.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 template<typename Fn, class C = NoClass>

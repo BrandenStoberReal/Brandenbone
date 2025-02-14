@@ -29,9 +29,9 @@
 // [AsmJit - Build-Type]
 // ============================================================================
 
-#ifdef BLACKBONE_STATIC
+#ifdef BrandenBone_STATIC
 #define ASMJIT_STATIC
-#elif BLACKBONE_EXPORTS
+#elif BrandenBone_EXPORTS
 #define ASMJIT_EXPORTS
 #endif
 

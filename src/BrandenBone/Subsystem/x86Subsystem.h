@@ -2,7 +2,7 @@
 
 #include "NativeSubsystem.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>
@@ -11,8 +11,8 @@ namespace blackbone
 class x86Native : public Native
 {
 public:
-    BLACKBONE_API x86Native( HANDLE hProcess );
-    BLACKBONE_API ~x86Native();
+    BRANDENBONE_API x86Native( HANDLE hProcess );
+    BRANDENBONE_API ~x86Native();
 
     /// <summary>
     /// Query virtual memory

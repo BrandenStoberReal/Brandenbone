@@ -1,7 +1,7 @@
 #pragma once
 #include "SymbolData.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 	SymbolData g_symbols;
 }

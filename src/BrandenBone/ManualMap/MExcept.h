@@ -3,7 +3,7 @@
 #include "../Include/Winheaders.h"
 #include "../Process/MemBlock.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>
@@ -31,8 +31,8 @@ struct ModuleTable
 class MExcept
 {
 public:
-    BLACKBONE_API MExcept() = default;
-    BLACKBONE_API ~MExcept() = default;
+    BRANDENBONE_API MExcept() = default;
+    BRANDENBONE_API ~MExcept() = default;
 
     MExcept( const MExcept& ) = delete;
     MExcept& operator =( const MExcept& ) = delete;
@@ -45,7 +45,7 @@ public:
     /// <param name="mod">Target module</param>
     /// <param name="partial">Partial exception support</param>
     /// <returns>Error code</returns>
-    BLACKBONE_API NTSTATUS CreateVEH( class Process& proc, ModuleData& mod, bool partial );
+    BRANDENBONE_API NTSTATUS CreateVEH( class Process& proc, ModuleData& mod, bool partial );
 
     /// <summary>
     /// Removes VEH from target process
@@ -54,12 +54,12 @@ public:
     /// <param name="partial">Partial exception support</param>
     /// <param name="mt">Module type</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS RemoveVEH( class Process& proc, bool partial, eModType mt );
+    BRANDENBONE_API NTSTATUS RemoveVEH( class Process& proc, bool partial, eModType mt );
 
     /// <summary>
     /// Reset data
     /// </summary>
-    BLACKBONE_API void reset() { _pModTable.Free(); }
+    BRANDENBONE_API void reset() { _pModTable.Free(); }
 
 private:
     MemBlock _pVEHCode;    // VEH function codecave

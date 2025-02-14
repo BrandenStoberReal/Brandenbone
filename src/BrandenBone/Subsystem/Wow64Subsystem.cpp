@@ -4,7 +4,7 @@
 #include <3rd_party/rewolf-wow64ext/src/wow64ext.h>
 #include "../Misc/Trace.hpp"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 NativeWow64::NativeWow64( HANDLE hProcess )

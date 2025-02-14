@@ -2,7 +2,7 @@
 #include "Winheaders.h"
 #include <memory>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 template<typename T>

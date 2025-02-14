@@ -3,7 +3,7 @@
 #include "HookHandlers.h"
 #include "../Process/Process.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 template<typename Fn, class C = NoClass>

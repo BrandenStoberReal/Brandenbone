@@ -1,9 +1,9 @@
-#include <BlackBone/Process/Process.h>
+#include <BrandenBone/Process/Process.h>
 #include <3rd_party/VersionApi.h>
 
 #include <iostream>
 #include <set>
-using namespace blackbone;
+using namespace BrandenBone;
 
 std::set<std::wstring> nativeMods, modList;
 

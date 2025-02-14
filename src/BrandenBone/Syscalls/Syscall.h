@@ -6,7 +6,7 @@
 
 extern "C" void* syscall_stub();
 
-namespace blackbone
+namespace BrandenBone
 {
 namespace syscall
 {

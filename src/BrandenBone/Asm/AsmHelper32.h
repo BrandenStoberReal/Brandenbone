@@ -2,7 +2,7 @@
 
 #include "IAsmHelper.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>
@@ -11,8 +11,8 @@ namespace blackbone
 class AsmHelper32 : public IAsmHelper
 {
 public:
-    BLACKBONE_API AsmHelper32( );
-    BLACKBONE_API ~AsmHelper32( void );
+    BRANDENBONE_API AsmHelper32( );
+    BRANDENBONE_API ~AsmHelper32( void );
 
     /// <summary>
     /// Generate function prologue code

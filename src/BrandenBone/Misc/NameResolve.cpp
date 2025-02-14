@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <3rd_party/VersionApi.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 NameResolve& NameResolve::Instance()
@@ -48,7 +48,7 @@ bool NameResolve::Initialize()
 /// </summary>
 /// <returns>true on success</returns>
 template<typename PApiSetMap, typename PApiSetEntry, typename PHostArray, typename PHostEntry>
-bool blackbone::NameResolve::InitializeP()
+bool BrandenBone::NameResolve::InitializeP()
 {
     if (!_apiSchema.empty())
         return true;

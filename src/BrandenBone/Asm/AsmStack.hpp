@@ -9,13 +9,13 @@
 
 #include <stdint.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 class AsmStackAllocator
 {
 public:
-    BLACKBONE_API AsmStackAllocator( asmjit::X86Assembler* pAsm, int32_t baseval = 0x28 )
+    BRANDENBONE_API AsmStackAllocator( asmjit::X86Assembler* pAsm, int32_t baseval = 0x28 )
         : _pAsm( pAsm )
         , disp_ofst( pAsm->getArch() == asmjit::kArch::kArchX64 ? baseval : sizeof( uint64_t ) )
     {
@@ -26,7 +26,7 @@ public:
     /// </summary>
     /// <param name="size">Variable size</param>
     /// <returns>Variable memory object</returns>
-    BLACKBONE_API asmjit::Mem AllocVar( int32_t size )
+    BRANDENBONE_API asmjit::Mem AllocVar( int32_t size )
     {
         bool x64 = _pAsm->getArch() == asmjit::kArch::kArchX64;
 
@@ -50,7 +50,7 @@ public:
     /// <param name="count">Array elements count.</param>
     /// <param name="size">Element size.</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool AllocArray( asmjit::Mem arr[], int count, int32_t size )
+    BRANDENBONE_API bool AllocArray( asmjit::Mem arr[], int count, int32_t size )
     {
         for (int i = 0; i < count; i++)
         {
@@ -69,7 +69,7 @@ public:
     /// Get total size of all stack variables
     /// </summary>
     /// <returns></returns>
-    BLACKBONE_API inline intptr_t getTotalSize() const { return disp_ofst; };
+    BRANDENBONE_API inline intptr_t getTotalSize() const { return disp_ofst; };
 
 private:
     asmjit::X86Assembler* _pAsm;    // Underlying assembler

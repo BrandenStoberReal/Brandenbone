@@ -7,7 +7,7 @@
 #include "../../Include/Macro.h"
 #include "../../Include/CallResult.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 enum LdrRefFlags
 {
@@ -32,14 +32,14 @@ struct NtLdrEntry : ModuleData
 class NtLdr
 {
 public:
-    BLACKBONE_API NtLdr( class Process& proc );
+    BRANDENBONE_API NtLdr( class Process& proc );
 
     /// <summary>
     /// Initialize some loader stuff
     /// </summary>
     /// <param name="initFor">Target module type</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool Init( eModType initFor = mt_default );
+    BRANDENBONE_API bool Init( eModType initFor = mt_default );
 
     /// <summary>
     /// Add module to some loader structures 
@@ -47,7 +47,7 @@ public:
     /// </summary>
     /// <param name="mod">Module data</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool CreateNTReference( NtLdrEntry& mod );
+    BRANDENBONE_API bool CreateNTReference( NtLdrEntry& mod );
 
     /// <summary>
     /// Create thread static TLS array
@@ -55,7 +55,7 @@ public:
     /// <param name="mod">Module data</param>
     /// <param name="tlsPtr">TLS directory of target image</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS AddStaticTLSEntry( NtLdrEntry& mod, ptr_t tlsPtr );
+    BRANDENBONE_API NTSTATUS AddStaticTLSEntry( NtLdrEntry& mod, ptr_t tlsPtr );
 
     /// <summary>
     /// Create module record in LdrpInvertedFunctionTable
@@ -63,7 +63,7 @@ public:
     /// </summary>
     /// <param name="mod">Module data</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool InsertInvertedFunctionTable( NtLdrEntry& mod );
+    BRANDENBONE_API bool InsertInvertedFunctionTable( NtLdrEntry& mod );
 
     /// <summary>
     /// Free static TLS
@@ -71,7 +71,7 @@ public:
     /// <param name="mod">Target module</param>
     /// <param name="noThread">Don't create new threads during remote call</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS UnloadTLS( const NtLdrEntry& mod, bool noThread = false );
+    BRANDENBONE_API NTSTATUS UnloadTLS( const NtLdrEntry& mod, bool noThread = false );
 
     /// <summary>
     /// Unlink module from Ntdll loader
@@ -79,7 +79,7 @@ public:
     /// <param name="mod">Module data</param>
     /// <param name="noThread">Don't create new threads during unlink</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool Unlink( const ModuleData& mod, bool noThread = false );
+    BRANDENBONE_API bool Unlink( const ModuleData& mod, bool noThread = false );
 private:
 
     /// <summary>

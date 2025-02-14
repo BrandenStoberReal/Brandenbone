@@ -13,7 +13,7 @@
 #define STATUS_INVALID_EXCEPTION_HANDLER ((NTSTATUS)0xC00001A5L)
 #endif
 
-namespace blackbone
+namespace BrandenBone
 {
 
 MMap::MMap( Process& proc )
@@ -120,7 +120,7 @@ call_result_t<ModuleDataPtr> MMap::MapImageInternal(
     _mapCallback = mapCallback;
     _userContext = context;
 
-    BLACKBONE_TRACE( L"ManualMap: Mapping image '%ls' with flags 0x%x", path.c_str(), flags );
+    BrandenBone_TRACE( L"ManualMap: Mapping image '%ls' with flags 0x%x", path.c_str(), flags );
 
     // Map module and all dependencies
     auto mod = FindOrMapModule( path, buffer, size, asImage, flags );
@@ -133,7 +133,7 @@ call_result_t<ModuleDataPtr> MMap::MapImageInternal(
     // Change process base module address if needed
     if (flags & RebaseProcess && !_images.empty() && _images.rbegin()->get()->peImage.isExe())
     {
-        BLACKBONE_TRACE( L"ManualMap: Rebasing process to address 0x%p", (*mod)->baseAddress );
+        BrandenBone_TRACE( L"ManualMap: Rebasing process to address 0x%p", (*mod)->baseAddress );
 
         // Managed path fix
         if (_images.rbegin()->get()->peImage.pureIL() && !path.empty())
@@ -203,7 +203,7 @@ call_result_t<ModuleDataPtr> MMap::MapImageInternal(
 
             if (!NT_SUCCESS( status ))
             {
-                BLACKBONE_TRACE( L"ManualMap: ModuleInitializers failed for '%ls', status: 0x%X", img->ldrEntry.name.c_str(), status );
+                BrandenBone_TRACE( L"ManualMap: ModuleInitializers failed for '%ls', status: 0x%X", img->ldrEntry.name.c_str(), status );
                 Cleanup();
                 return status;
             }
@@ -291,7 +291,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
     status = buffer ? pImage->peImage.Load( buffer, size, !asImage ) : pImage->peImage.Load( path, flags & NoSxS ? true : false );
     if (!NT_SUCCESS( status ))
     {
-        BLACKBONE_TRACE( L"ManualMap: Failed to load image '%ls'/0x%p. Status 0x%X", path.c_str(), buffer, status );
+        BrandenBone_TRACE( L"ManualMap: Failed to load image '%ls'/0x%p. Status 0x%X", path.c_str(), buffer, status );
         pImage->peImage.Release();
         return status;
     }
@@ -309,12 +309,12 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
     // Check architecture
     if (pImage->peImage.mType() == mt_mod32 && !_process.core().isWow64())
     {
-        BLACKBONE_TRACE( L"ManualMap: Can't map x86 dll '%ls' into native x64 process", path.c_str() );
+        BrandenBone_TRACE( L"ManualMap: Can't map x86 dll '%ls' into native x64 process", path.c_str() );
         pImage->peImage.Release();
         return STATUS_INVALID_IMAGE_WIN_32;
     }
 
-    BLACKBONE_TRACE( L"ManualMap: Loading new image '%ls'", path.c_str() );
+    BrandenBone_TRACE( L"ManualMap: Loading new image '%ls'", path.c_str() );
 
     ldrEntry.type = pImage->peImage.mType();
 
@@ -355,7 +355,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
         else
         {
             //flags &= ~HideVAD;
-            BLACKBONE_TRACE( L"ManualMap: Failed to allocate physical memory for image, status 0x%X", status );
+            BrandenBone_TRACE( L"ManualMap: Failed to allocate physical memory for image, status 0x%X", status );
             pImage->peImage.Release();
             return status;
         }
@@ -367,7 +367,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
         auto mem = _process.memory().Allocate( pImage->peImage.imageSize(), PAGE_EXECUTE_READWRITE, pImage->peImage.imageBase() );
         if (!mem)
         {
-            BLACKBONE_TRACE( L"ManualMap: Failed to allocate memory for image, status 0x%X", status );
+            BrandenBone_TRACE( L"ManualMap: Failed to allocate memory for image, status 0x%X", status );
             pImage->peImage.Release();
             return mem.status;
         }
@@ -378,7 +378,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
     ldrEntry.baseAddress = pImage->imgMem.ptr();
     ldrEntry.size = pImage->peImage.imageSize();
 
-    BLACKBONE_TRACE( L"ManualMap: Image base allocated at 0x%016llx", pImage->imgMem.ptr() );
+    BrandenBone_TRACE( L"ManualMap: Image base allocated at 0x%016llx", pImage->imgMem.ptr() );
 
     // Create Activation context for SxS
     if (pImage->peImage.manifestID() == 0)
@@ -447,7 +447,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
     {
         if (!NT_SUCCESS( status = EnableExceptions( pImage ) ) && status != STATUS_NOT_FOUND)
         {
-            BLACKBONE_TRACE( L"ManualMap: Failed to enable exception handling for image %ls", ldrEntry.name.c_str() );
+            BrandenBone_TRACE( L"ManualMap: Failed to enable exception handling for image %ls", ldrEntry.name.c_str() );
             pImage->peImage.Release();
             _process.modules().RemoveManualModule( ldrEntry.name, mt );
             return status;
@@ -457,7 +457,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
     // Initialize security cookie
     if (!NT_SUCCESS ( status = InitializeCookie( pImage ) ))
     {
-        BLACKBONE_TRACE( L"ManualMap: Failed to initialize cookie for image %ls", ldrEntry.name.c_str() );
+        BrandenBone_TRACE( L"ManualMap: Failed to initialize cookie for image %ls", ldrEntry.name.c_str() );
         pImage->peImage.Release();
         _process.modules().RemoveManualModule( ldrEntry.name, mt );
         return status;
@@ -487,14 +487,14 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
     {       
         if (!_process.nativeLdr().CreateNTReference( pImage->ldrEntry ))
         {
-            BLACKBONE_TRACE( L"ManualMap: Failed to add loader reference for image %ls", ldrEntry.name.c_str() );
+            BrandenBone_TRACE( L"ManualMap: Failed to add loader reference for image %ls", ldrEntry.name.c_str() );
         }
     }
 
     // Static TLS data
     if (!(flags & NoTLS) && !NT_SUCCESS( status = InitStaticTLS( pImage ) ))
     {
-        BLACKBONE_TRACE( L"ManualMap: Failed to initialize static TLS for image %ls, status 0x%X", ldrEntry.name.c_str(), status );
+        BrandenBone_TRACE( L"ManualMap: Failed to initialize static TLS for image %ls, status 0x%X", ldrEntry.name.c_str(), status );
         pImage->peImage.Release();
         _process.modules().RemoveManualModule( ldrEntry.name, mt );
         return status;
@@ -523,7 +523,7 @@ NTSTATUS MMap::UnmapAllModules()
     for (auto img = _images.rbegin(); img != _images.rend(); ++img)
     {
         auto pImage = *img;
-        BLACKBONE_TRACE( L"ManualMap: Unmapping image '%ls'", pImage->ldrEntry.name.c_str() );
+        BrandenBone_TRACE( L"ManualMap: Unmapping image '%ls'", pImage->ldrEntry.name.c_str() );
 
         // Call main
         RunModuleInitializers( pImage, DLL_PROCESS_DETACH );
@@ -558,7 +558,7 @@ NTSTATUS MMap::CopyImage( ImageContextPtr pImage )
 {
     NTSTATUS status = STATUS_SUCCESS;
 
-    BLACKBONE_TRACE( L"ManualMap: Performing image copy" );
+    BrandenBone_TRACE( L"ManualMap: Performing image copy" );
 
     // offset to first section equals to header size
     size_t dwHeaderSize = pImage->peImage.headersSize();
@@ -571,7 +571,7 @@ NTSTATUS MMap::CopyImage( ImageContextPtr pImage )
 
     if (!NT_SUCCESS( status ))
     {
-        BLACKBONE_TRACE( L"ManualMap: Failed to copy image headers. Status = 0x%x", status );
+        BrandenBone_TRACE( L"ManualMap: Failed to copy image headers. Status = 0x%x", status );
         return status;
     }
 
@@ -581,7 +581,7 @@ NTSTATUS MMap::CopyImage( ImageContextPtr pImage )
         status = pImage->imgMem.Protect( PAGE_READONLY, 0, dwHeaderSize );
         if (!NT_SUCCESS( status ))
         {
-            BLACKBONE_TRACE( L"ManualMap: Failed to set header memory protection. Status = 0x%x", status );
+            BrandenBone_TRACE( L"ManualMap: Failed to set header memory protection. Status = 0x%x", status );
             return status;
         }
     }
@@ -612,7 +612,7 @@ NTSTATUS MMap::CopyImage( ImageContextPtr pImage )
 
             if (!NT_SUCCESS( status ))
             {
-                BLACKBONE_TRACE(
+                BrandenBone_TRACE(
                     L"ManualMap: Failed to copy image section at offset 0x%x. Status = 0x%x",
                     section.VirtualAddress, status
                     );
@@ -641,7 +641,7 @@ NTSTATUS MMap::ProtectImageMemory( ImageContextPtr pImage )
             auto status = pImage->imgMem.Protect( prot, section.VirtualAddress, section.Misc.VirtualSize );
             if (!NT_SUCCESS( status ))
             {
-                BLACKBONE_TRACE(
+                BrandenBone_TRACE(
                     L"ManualMap: Failed to set section memory protection at offset 0x%x. Status = 0x%x",
                     section.VirtualAddress, status
                     );
@@ -655,7 +655,7 @@ NTSTATUS MMap::ProtectImageMemory( ImageContextPtr pImage )
             auto status = _process.memory().Free( pImage->imgMem.ptr() + section.VirtualAddress, section.Misc.VirtualSize, MEM_DECOMMIT );
             if (!NT_SUCCESS( status ))
             {
-                BLACKBONE_TRACE(
+                BrandenBone_TRACE(
                     L"ManualMap: Failed to set section memory protection at offset 0x%x. Status = 0x%x",
                     section.VirtualAddress, status
                 );
@@ -674,7 +674,7 @@ NTSTATUS MMap::ProtectImageMemory( ImageContextPtr pImage )
 NTSTATUS MMap::RelocateImage( ImageContextPtr pImage )
 {
     NTSTATUS status = STATUS_SUCCESS;
-    BLACKBONE_TRACE( L"ManualMap: Relocating image '%ls'", pImage->ldrEntry.fullPath.c_str() );
+    BrandenBone_TRACE( L"ManualMap: Relocating image '%ls'", pImage->ldrEntry.fullPath.c_str() );
 
     // Reloc delta
     ptr_t Delta = pImage->imgMem.ptr() - pImage->peImage.imageBase();
@@ -682,14 +682,14 @@ NTSTATUS MMap::RelocateImage( ImageContextPtr pImage )
     // No need to relocate
     if (Delta == 0)
     {
-        BLACKBONE_TRACE( L"ManualMap: No need for relocation" );
+        BrandenBone_TRACE( L"ManualMap: No need for relocation" );
         return STATUS_SUCCESS;
     }
 
     // Dll can't be relocated
     if (!(pImage->peImage.DllCharacteristics() & IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE))
     {
-        BLACKBONE_TRACE( L"ManualMap: Can't relocate image, no relocation flag" );
+        BrandenBone_TRACE( L"ManualMap: Can't relocate image, no relocation flag" );
         return STATUS_INVALID_IMAGE_HASH;
     }
 
@@ -700,7 +700,7 @@ NTSTATUS MMap::RelocateImage( ImageContextPtr pImage )
     // No relocatable data
     if (fixrec == nullptr)
     {
-        BLACKBONE_TRACE( L"ManualMap: Image does not use relocations" );
+        BrandenBone_TRACE( L"ManualMap: Image does not use relocations" );
         return STATUS_SUCCESS;
     }
 
@@ -740,7 +740,7 @@ NTSTATUS MMap::RelocateImage( ImageContextPtr pImage )
             else
             {
                 // TODO: support for all remaining relocations
-                BLACKBONE_TRACE( L"ManualMap: Abnormal relocation type %d. Aborting", fixtype );
+                BrandenBone_TRACE( L"ManualMap: Abnormal relocation type %d. Aborting", fixtype );
                 return STATUS_INVALID_IMAGE_FORMAT;
             }
         }
@@ -757,7 +757,7 @@ NTSTATUS MMap::RelocateImage( ImageContextPtr pImage )
 
     if (!NT_SUCCESS( status ))
     {
-        BLACKBONE_TRACE( L"ManualMap: Failed to apply relocations. Status = 0x%x", status );
+        BrandenBone_TRACE( L"ManualMap: Failed to apply relocations. Status = 0x%x", status );
     }
 
     return status;
@@ -776,7 +776,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapDependency( ImageContextPtr pImage, 
     if (hMod)
         return hMod;
 
-    BLACKBONE_TRACE( L"ManualMap: Loading new dependency '%ls'", path.c_str() );
+    BrandenBone_TRACE( L"ManualMap: Loading new dependency '%ls'", path.c_str() );
 
     auto flags = NameResolve::EnsureFullPath;
 
@@ -802,11 +802,11 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapDependency( ImageContextPtr pImage, 
 
     if (!NT_SUCCESS( status ))
     {
-        BLACKBONE_TRACE( L"ManualMap: Failed to resolve dependency path '%ls', status 0x%x", path.c_str(), status );
+        BrandenBone_TRACE( L"ManualMap: Failed to resolve dependency path '%ls', status 0x%x", path.c_str(), status );
         return status;
     }
 
-    BLACKBONE_TRACE( L"ManualMap: Dependency path resolved to '%ls'", path.c_str() );
+    BrandenBone_TRACE( L"ManualMap: Dependency path resolved to '%ls'", path.c_str() );
 
     LoadData data;
     if (_mapCallback != nullptr)
@@ -864,7 +864,7 @@ NTSTATUS MMap::ResolveImport( ImageContextPtr pImage, bool useDelayed /*= false 
         auto hMod = FindOrMapDependency( pImage, wstrDll );
         if (!hMod)
         {
-            BLACKBONE_TRACE( L"ManualMap: Failed to load dependency '%ls'. Status 0x%x", wstrDll.c_str(), hMod.status );
+            BrandenBone_TRACE( L"ManualMap: Failed to load dependency '%ls'. Status 0x%x", wstrDll.c_str(), hMod.status );
             return hMod.status;
         }
 
@@ -886,7 +886,7 @@ NTSTATUS MMap::ResolveImport( ImageContextPtr pImage, bool useDelayed /*= false 
                 auto hFwdMod = FindOrMapDependency( pImage, wdllpath );
                 if (!hFwdMod)
                 {
-                    BLACKBONE_TRACE( L"ManualMap: Failed to load forwarded dependency '%ls'. Status 0x%x", wstrDll.c_str(), hFwdMod.status );
+                    BrandenBone_TRACE( L"ManualMap: Failed to load forwarded dependency '%ls'. Status 0x%x", wstrDll.c_str(), hFwdMod.status );
                     return hFwdMod.status;
                 }
 
@@ -907,7 +907,7 @@ NTSTATUS MMap::ResolveImport( ImageContextPtr pImage, bool useDelayed /*= false 
             {
                 if (importFn.importByOrd)
                 {
-                    BLACKBONE_TRACE(
+                    BrandenBone_TRACE(
                         L"ManualMap: Failed to get import #%d from image '%ls'",
                         importFn.importOrdinal,
                         wstrDll.c_str()
@@ -915,7 +915,7 @@ NTSTATUS MMap::ResolveImport( ImageContextPtr pImage, bool useDelayed /*= false 
                 }
                 else
                 {
-                    BLACKBONE_TRACE(
+                    BrandenBone_TRACE(
                         L"ManualMap: Failed to get import '%ls' from image '%ls'",
                         Utils::AnsiToWstring( importFn.importName ).c_str(),
                         wstrDll.c_str()
@@ -956,7 +956,7 @@ NTSTATUS MMap::ResolveImport( ImageContextPtr pImage, bool useDelayed /*= false 
     // Write function address
     if (!NT_SUCCESS( status ))
     {
-        BLACKBONE_TRACE( L"ManualMap: Failed to write import function. Status 0x%x", status );
+        BrandenBone_TRACE( L"ManualMap: Failed to write import function. Status 0x%x", status );
     }
 
     return status;
@@ -969,7 +969,7 @@ NTSTATUS MMap::ResolveImport( ImageContextPtr pImage, bool useDelayed /*= false 
 /// <returns>true on success</returns>
 NTSTATUS MMap::EnableExceptions( ImageContextPtr pImage )
 {
-    BLACKBONE_TRACE( L"ManualMap: Enabling exception support for image '%ls'", pImage->ldrEntry.name.c_str() );
+    BrandenBone_TRACE( L"ManualMap: Enabling exception support for image '%ls'", pImage->ldrEntry.name.c_str() );
     bool partial = (pImage->flags & PartialExcept) != 0;
     bool success = _process.nativeLdr().InsertInvertedFunctionTable( pImage->ldrEntry );
 
@@ -1030,7 +1030,7 @@ NTSTATUS MMap::EnableExceptions( ImageContextPtr pImage )
 /// <returns>true on success</returns>
 NTSTATUS MMap::DisableExceptions( ImageContextPtr pImage )
 {
-    BLACKBONE_TRACE( L"ManualMap: Disabling exception support for image '%ls'", pImage->ldrEntry.name.c_str() );
+    BrandenBone_TRACE( L"ManualMap: Disabling exception support for image '%ls'", pImage->ldrEntry.name.c_str() );
     bool partial = false;
 
     if (pImage->ldrEntry.type == mt_mod64)
@@ -1073,7 +1073,7 @@ NTSTATUS MMap::InitStaticTLS( ImageContextPtr pImage )
     // Use native TLS initialization
     if (pTls && pTls->AddressOfIndex)
     {
-        BLACKBONE_TRACE( L"ManualMap: Performing static TLS initialization for image '%ls'", pImage->ldrEntry.name.c_str() );
+        BrandenBone_TRACE( L"ManualMap: Performing static TLS initialization for image '%ls'", pImage->ldrEntry.name.c_str() );
         return _process.nativeLdr().AddStaticTLSEntry( pImage->ldrEntry, rebasedTlsPtr );
     }
 
@@ -1102,7 +1102,7 @@ NTSTATUS MMap::InitializeCookie( ImageContextPtr pImage )
     //
     // Cookie generation based on MSVC++ compiler
     //
-    BLACKBONE_TRACE( L"ManualMap: Performing security cookie initializtion for image '%ls'", pImage->ldrEntry.name.c_str() );
+    BrandenBone_TRACE( L"ManualMap: Performing security cookie initializtion for image '%ls'", pImage->ldrEntry.name.c_str() );
 
     FILETIME systime = { 0 };
     LARGE_INTEGER PerformanceCount = { { 0 } };
@@ -1190,7 +1190,7 @@ call_result_t<uint64_t> MMap::RunModuleInitializers( ImageContextPtr pImage, DWO
         // PTLS_CALLBACK_FUNCTION(pImage->ImageBase, dwReason, NULL);
         for (auto& pCallback : pImage->tlsCallbacks)
         {
-            BLACKBONE_TRACE( 
+            BrandenBone_TRACE( 
                 L"ManualMap: Calling TLS callback at 0x%016llx for '%ls', Reason: %d",
                 pCallback, pImage->ldrEntry.name.c_str(), dwReason 
             );
@@ -1202,7 +1202,7 @@ call_result_t<uint64_t> MMap::RunModuleInitializers( ImageContextPtr pImage, DWO
     // DllMain
     if (pImage->ldrEntry.entryPoint != 0)
     {
-        BLACKBONE_TRACE( L"ManualMap: Calling entry point for '%ls', Reason: %d", pImage->ldrEntry.name.c_str(), dwReason );
+        BrandenBone_TRACE( L"ManualMap: Calling entry point for '%ls', Reason: %d", pImage->ldrEntry.name.c_str(), dwReason );
         a->GenCall( pImage->ldrEntry.entryPoint, { pImage->imgMem.ptr(), dwReason, customArgumentsAddress } );
         _process.remote().SaveCallResult( *a );
     }
@@ -1226,7 +1226,7 @@ call_result_t<uint64_t> MMap::RunModuleInitializers( ImageContextPtr pImage, DWO
     if (pImage->ldrEntry.entryPoint == 0)
         return call_result_t<uint64_t>( ERROR_SUCCESS, STATUS_SUCCESS );
     
-    BLACKBONE_TRACE( L"ManualMap: DllMain of '%ls' returned %lld", pImage->ldrEntry.name.c_str(), result );
+    BrandenBone_TRACE( L"ManualMap: DllMain of '%ls' returned %lld", pImage->ldrEntry.name.c_str(), result );
     return result;
 }
 
@@ -1257,7 +1257,7 @@ NTSTATUS MMap::CreateActx( const pe::PEImage& image  )
     auto kernel32 = _process.modules().GetModule( L"kernel32.dll" );
     if (!kernel32)
     {
-        BLACKBONE_TRACE( 
+        BrandenBone_TRACE( 
             L"ManualMap: Failed to get kernel32 base, error 0x%08x. Possibly LDR is not available yet", 
             LastNtStatus() 
         );
@@ -1267,7 +1267,7 @@ NTSTATUS MMap::CreateActx( const pe::PEImage& image  )
     auto pCreateActx = _process.modules().GetExport( kernel32, "CreateActCtxW" );
     if (!pCreateActx)
     {
-        BLACKBONE_TRACE( 
+        BrandenBone_TRACE( 
             L"ManualMap: Failed to create activation context for image '%ls'. 'CreateActCtxW' is absent", 
             image.manifestFile().c_str() 
         );
@@ -1368,7 +1368,7 @@ NTSTATUS MMap::CreateActx( const pe::PEImage& image  )
         _pAContext.Free();
 
         status = _process.remote().GetLastStatus();
-        BLACKBONE_TRACE( L"ManualMap: Failed to create activation context for image '%ls'. Status: 0x%x", image.manifestFile().c_str(), status );
+        BrandenBone_TRACE( L"ManualMap: Failed to create activation context for image '%ls'. Status: 0x%x", image.manifestFile().c_str(), status );
         return status;
     }
 

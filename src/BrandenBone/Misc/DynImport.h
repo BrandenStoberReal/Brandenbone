@@ -7,7 +7,7 @@
 
 #include <unordered_map>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>
@@ -16,7 +16,7 @@ namespace blackbone
 class DynImport
 {
 public:
-    BLACKBONE_API static DynImport& Instance()
+    BRANDENBONE_API static DynImport& Instance()
     {
         static DynImport instance;
         return instance;
@@ -78,7 +78,7 @@ public:
     /// <param name="name">Function name</param>
     /// <param name="module">Module name</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API FARPROC load( const std::string& name, const std::wstring& modName )
+    BRANDENBONE_API FARPROC load( const std::string& name, const std::wstring& modName )
     {
         auto mod = GetModuleHandleW( modName.c_str() );
         return load( name, mod );
@@ -90,7 +90,7 @@ public:
     /// <param name="name">Function name</param>
     /// <param name="hMod">Module base</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API FARPROC load( const std::string& name, HMODULE hMod )
+    BRANDENBONE_API FARPROC load( const std::string& name, HMODULE hMod )
     {
         CSLock lck( _mapGuard );
 

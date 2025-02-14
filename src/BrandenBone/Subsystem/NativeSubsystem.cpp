@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <Psapi.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 Native::Native( HANDLE hProcess, bool x86OS /*= false*/ )
@@ -462,7 +462,7 @@ std::vector<ModuleDataPtr> Native::EnumModulesT()
     }
     else
     {
-        BLACKBONE_TRACE( L"NativeModules: Failed to get PEB/LDR address. Not yet initialized" );
+        BrandenBone_TRACE( L"NativeModules: Failed to get PEB/LDR address. Not yet initialized" );
     }
 
     return result;

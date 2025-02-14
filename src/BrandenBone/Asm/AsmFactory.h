@@ -5,7 +5,7 @@
 #include "AsmHelper64.h"
 #include "AsmHelper32.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 using AsmHelperPtr = std::unique_ptr<IAsmHelper>;

@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <excpt.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>
@@ -68,7 +68,7 @@ protected:
         // Invalid address
         __except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
         {
-            BLACKBONE_TRACE(
+            BrandenBone_TRACE(
                 "Invalid pointer derefrence: base 0x%p, offset 0x%08x, target address 0x%p",
                 _base, (i > 0 ? _offsets[i] : -1), ptr
             );

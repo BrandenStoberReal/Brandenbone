@@ -2,7 +2,7 @@
 #include "../Misc/DynImport.h"
 #include "../Include/Macro.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 x86Native::x86Native( HANDLE hProcess )

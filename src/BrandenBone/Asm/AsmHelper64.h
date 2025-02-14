@@ -3,14 +3,14 @@
 #include "IAsmHelper.h"
 #include "../Include/Macro.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 class AsmHelper64 : public IAsmHelper
 {
 public:
-    BLACKBONE_API AsmHelper64();
-    BLACKBONE_API ~AsmHelper64( void );
+    BRANDENBONE_API AsmHelper64();
+    BRANDENBONE_API ~AsmHelper64( void );
 
     /// <summary>
     /// Generate function prologue code

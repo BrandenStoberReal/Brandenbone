@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 // Maximum possible instruction length for x86-64

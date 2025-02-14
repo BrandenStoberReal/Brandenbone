@@ -5,7 +5,7 @@
 #include "../Threads/Thread.h"
 #include "../../Include/Macro.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>
@@ -14,7 +14,7 @@ namespace blackbone
 class RemoteContext
 {
 public:
-    BLACKBONE_API RemoteContext( 
+    BRANDENBONE_API RemoteContext( 
         ProcessMemory& memory,
         Thread& thd,
         _CONTEXT64& ctx,
@@ -31,18 +31,18 @@ public:
     {     
     }
 
-    BLACKBONE_API ~RemoteContext()
+    BRANDENBONE_API ~RemoteContext()
     {
     }
 
     // memory object
-    BLACKBONE_API inline ProcessMemory& memory()
+    BRANDENBONE_API inline ProcessMemory& memory()
     { 
         return _memory; 
     }
     
     // Native context
-    BLACKBONE_API inline _CONTEXT64& native()
+    BRANDENBONE_API inline _CONTEXT64& native()
     { 
         return _ctx; 
     }
@@ -51,7 +51,7 @@ public:
     /// Get current process thread where exception occurred
     /// </summary>
     /// <returns>Thread</returns>
-    BLACKBONE_API  inline Thread& getThread()
+    BRANDENBONE_API  inline Thread& getThread()
     {
         return _thd;
     }
@@ -60,7 +60,7 @@ public:
     /// 
     /// </summary>
     /// <returns>Return address</returns>
-    BLACKBONE_API inline const ptr_t returnAddress() const
+    BRANDENBONE_API inline const ptr_t returnAddress() const
     { 
         ptr_t val = 0;
         _memory.Read( _frame_ptr, _wordSize, &val );
@@ -73,7 +73,7 @@ public:
     /// </summary>
     /// <param name="val">New return address</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API inline bool returnAddress( ptr_t val ) const
+    BRANDENBONE_API inline bool returnAddress( ptr_t val ) const
     { 
         return (_memory.Write( _frame_ptr, _wordSize, &val ) == STATUS_SUCCESS);
     }
@@ -83,7 +83,7 @@ public:
     /// Has effect only if called in return callback
     /// </summary>
     /// <param name="val">New return value</param>
-    BLACKBONE_API inline void setReturnValue( ptr_t val ) const
+    BRANDENBONE_API inline void setReturnValue( ptr_t val ) const
     { 
         memcpy( &_ctx.Rax, &val, _wordSize );
     }
@@ -92,7 +92,7 @@ public:
     /// Raise exception on function return
     /// </summary>
     /// <returns>Masked return address</returns>
-    BLACKBONE_API ptr_t hookReturn()
+    BRANDENBONE_API ptr_t hookReturn()
     {
         ptr_t val = returnAddress();
         SET_BIT( val, (_wordSize * 8 - 1) );
@@ -106,7 +106,7 @@ public:
     /// Remove exception on return
     /// </summary>
     /// <returns>Return address</returns>
-    BLACKBONE_API ptr_t unhookReturn()
+    BRANDENBONE_API ptr_t unhookReturn()
     {
         auto val = returnAddress();
         RESET_BIT( val, (_wordSize * 8 - 1) );
@@ -124,7 +124,7 @@ public:
     /// </summary>
     /// <param name="index">0-based argument index</param>
     /// <returns>Argument value</returns>
-    BLACKBONE_API DWORD64 getArg( int index )
+    BRANDENBONE_API DWORD64 getArg( int index )
     {
         if(_x64Target)
         {
@@ -159,7 +159,7 @@ public:
     /// <param name="index">0-based argument index</param>
     /// <param name="val">New argument value</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool setArg( int index, DWORD64 val )
+    BRANDENBONE_API bool setArg( int index, DWORD64 val )
     {
         if (_x64Target)
         {
@@ -195,7 +195,7 @@ public:
     /// Get last thread error code
     /// </summary>
     /// <returns>Last error code, -1 if function failed</returns>
-    BLACKBONE_API DWORD lastError()
+    BRANDENBONE_API DWORD lastError()
     {
         ptr_t pteb = 0;
         LONG offset = 0;
@@ -221,7 +221,7 @@ public:
     /// Set last thread error code
     /// </summary>
     /// <returns>Last error code, -1 if function failed</returns>
-    BLACKBONE_API DWORD lastError( DWORD newError )
+    BRANDENBONE_API DWORD lastError( DWORD newError )
     {
         ptr_t pteb = 0;
         LONG offset = 0;
@@ -248,7 +248,7 @@ public:
     /// Get arbitrary thread data
     /// </summary>
     /// <returns>Data value</returns>
-    BLACKBONE_API ptr_t getUserContext()
+    BRANDENBONE_API ptr_t getUserContext()
     {
         auto pteb = _thd.teb( (_TEB64*)nullptr );
         if (!pteb)
@@ -261,7 +261,7 @@ public:
     /// Set arbitrary thread data
     /// </summary>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool setUserContext( ptr_t context )
+    BRANDENBONE_API bool setUserContext( ptr_t context )
     {
         auto pteb = _thd.teb( (_TEB64*)nullptr );
         if(pteb)

@@ -12,7 +12,7 @@
 #include <set>
 #include <stdint.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 class RemoteHook
@@ -69,8 +69,8 @@ public:
     using setAddresses = std::map<ptr_t, bool>;
 
 public:
-    BLACKBONE_API RemoteHook( class ProcessMemory& memory );
-    BLACKBONE_API ~RemoteHook();
+    BRANDENBONE_API RemoteHook( class ProcessMemory& memory );
+    BRANDENBONE_API ~RemoteHook();
 
     /// <summary>
     /// Hook specified address
@@ -80,7 +80,7 @@ public:
     /// <param name="newFn">Callback</param>
     /// <param name="pThread">Thread to hook. Valid only for HWBP</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API inline NTSTATUS Apply( eHookType type, uint64_t ptr, fnCallback newFn, ThreadPtr pThread = nullptr )
+    BRANDENBONE_API inline NTSTATUS Apply( eHookType type, uint64_t ptr, fnCallback newFn, ThreadPtr pThread = nullptr )
     {
         return ApplyP( type, ptr, newFn, nullptr, pThread );
     }
@@ -92,7 +92,7 @@ public:
     /// <param name="ptr">Hooked function address</param>
     /// <param name="newFn">Callback</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API inline NTSTATUS AddReturnHook( uint64_t ptr, fnCallback newFn )
+    BRANDENBONE_API inline NTSTATUS AddReturnHook( uint64_t ptr, fnCallback newFn )
     {
         return AddReturnHookP( ptr, newFn, nullptr );
     }
@@ -134,12 +134,12 @@ public:
     /// Remove existing hook
     /// </summary>
     /// <param name="ptr">Hooked address</param>
-    BLACKBONE_API void Remove( uint64_t ptr );
+    BRANDENBONE_API void Remove( uint64_t ptr );
 
     /// <summary>
     /// Stop debug and remove all hooks
     /// </summary>
-    BLACKBONE_API void reset();
+    BRANDENBONE_API void reset();
 
 private:
 
@@ -152,7 +152,7 @@ private:
     /// <param name="pClass">Class reference.</param>
     /// <param name="pThread">Thread to hook. Valid only for HWBP</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API NTSTATUS ApplyP( eHookType type, uint64_t ptr, fnCallback newFn, const void* pClass = nullptr, ThreadPtr pThread = nullptr );
+    BRANDENBONE_API NTSTATUS ApplyP( eHookType type, uint64_t ptr, fnCallback newFn, const void* pClass = nullptr, ThreadPtr pThread = nullptr );
 
     /// <summary>
     /// Hook function return
@@ -162,14 +162,14 @@ private:
     /// <param name="newFn">Callback</param>
     /// <param name="pClass">Class reference.</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API NTSTATUS AddReturnHookP( uint64_t ptr, fnCallback newFn, const void* pClass = nullptr );
+    BRANDENBONE_API NTSTATUS AddReturnHookP( uint64_t ptr, fnCallback newFn, const void* pClass = nullptr );
 
     /// <summary>
     /// Restore hooked function
     /// </summary>
     /// <param name="hook">Hook data</param>
     /// <param name="ptr">Hooked address</param>
-    BLACKBONE_API void Restore( const HookData &hook, uint64_t ptr );
+    BRANDENBONE_API void Restore( const HookData &hook, uint64_t ptr );
 
     /// <summary>
     /// Debug selected process

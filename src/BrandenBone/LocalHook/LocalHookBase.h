@@ -9,7 +9,7 @@
 #include <tuple>
 #include <unordered_map>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 namespace CallOrder
@@ -50,8 +50,8 @@ class DetourBase
     using mapIdx = std::unordered_map<DWORD, int>;
 
 public:
-    BLACKBONE_API DetourBase();
-    BLACKBONE_API ~DetourBase();
+    BRANDENBONE_API DetourBase();
+    BRANDENBONE_API ~DetourBase();
 
 protected:
 
@@ -60,19 +60,19 @@ protected:
     /// </summary>
     /// <param name="nearest">Target address</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool AllocateBuffer( uint8_t* nearest );
+    BRANDENBONE_API bool AllocateBuffer( uint8_t* nearest );
 
     /// <summary>
     /// Temporarily disable hook
     /// </summary>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool DisableHook();
+    BRANDENBONE_API bool DisableHook();
 
     /// <summary>
     /// Enable disabled hook
     /// </summary>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool EnableHook();
+    BRANDENBONE_API bool EnableHook();
 
     /// <summary>
     /// Toggle hardware breakpoint for current thread
@@ -80,23 +80,23 @@ protected:
     /// <param name="index">Breakpoint index ( 0-4 )</param>
     /// <param name="enable">true to enable, false to disable</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool ToggleHBP( int index, bool enable );
+    BRANDENBONE_API bool ToggleHBP( int index, bool enable );
 
     /// <summary>
     /// Copy original function bytes
     /// </summary>
     /// <param name="Ptr">Origianl function address</param>
-    BLACKBONE_API void CopyOldCode( uint8_t* Ptr );
+    BRANDENBONE_API void CopyOldCode( uint8_t* Ptr );
 
     /// <summary>
     /// Exception handlers
     /// </summary>
     /// <param name="excpt">Exception information</param>
     /// <returns>Exception disposition</returns>
-    BLACKBONE_API static LONG NTAPI VectoredHandler ( PEXCEPTION_POINTERS excpt );
-    BLACKBONE_API static LONG NTAPI Int3Handler     ( PEXCEPTION_POINTERS excpt );
-    BLACKBONE_API static LONG NTAPI AVHandler       ( PEXCEPTION_POINTERS excpt );
-    BLACKBONE_API static LONG NTAPI StepHandler     ( PEXCEPTION_POINTERS excpt );
+    BRANDENBONE_API static LONG NTAPI VectoredHandler ( PEXCEPTION_POINTERS excpt );
+    BRANDENBONE_API static LONG NTAPI Int3Handler     ( PEXCEPTION_POINTERS excpt );
+    BRANDENBONE_API static LONG NTAPI AVHandler       ( PEXCEPTION_POINTERS excpt );
+    BRANDENBONE_API static LONG NTAPI StepHandler     ( PEXCEPTION_POINTERS excpt );
 
 protected:
     bool _hooked = false;               // Hook is installed
@@ -119,10 +119,10 @@ protected:
     ReturnMethod::e _retType = ReturnMethod::UseOriginal;
 
     // Global hook instances relationship
-    BLACKBONE_API static std::unordered_map<void*, DetourBase*> _breakpoints;
+    BRANDENBONE_API static std::unordered_map<void*, DetourBase*> _breakpoints;
 
     // Exception handler
-    BLACKBONE_API static void* _vecHandler;
+    BRANDENBONE_API static void* _vecHandler;
 };
 
 }

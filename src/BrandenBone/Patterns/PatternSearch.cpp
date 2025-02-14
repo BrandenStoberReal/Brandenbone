@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <memory>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 PatternSearch::PatternSearch( const std::vector<uint8_t>& pattern, size_t logAlignment /*= 0*/ )

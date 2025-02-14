@@ -6,7 +6,7 @@
 #include <string>
 #include <map>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 
@@ -54,15 +54,15 @@ public:
     };
 
 public:
-    BLACKBONE_API RemoteMemory( class Process* process );
-    BLACKBONE_API ~RemoteMemory();
+    BRANDENBONE_API RemoteMemory( class Process* process );
+    BRANDENBONE_API ~RemoteMemory();
 
     /// <summary>
     /// Map entire process address space
     /// </summary>
     /// <param name="mapSections">Set to true to map section objects. They are converted to private pages before locking</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Map( bool mapSections );
+    BRANDENBONE_API NTSTATUS Map( bool mapSections );
 
     /// <summary>
     /// Map specific memory region
@@ -70,13 +70,13 @@ public:
     /// <param name="base">Region base</param>
     /// <param name="size">Region size</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Map( ptr_t base, uint32_t size );
+    BRANDENBONE_API NTSTATUS Map( ptr_t base, uint32_t size );
 
     /// <summary>
     /// Unmap process address space from current process
     /// </summary>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Unmap();
+    BRANDENBONE_API NTSTATUS Unmap();
 
     /// <summary>
     /// Unmap specific memory region from current process
@@ -84,7 +84,7 @@ public:
     /// <param name="base">Region base</param>
     /// <param name="size">Region size</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Unmap( ptr_t base, uint32_t size );
+    BRANDENBONE_API NTSTATUS Unmap( ptr_t base, uint32_t size );
 
     /// <summary>
     /// Translate target address accordingly to current address space
@@ -92,7 +92,7 @@ public:
     /// <param name="address">Address to translate</param>
     /// <param name="resolveFault">If set to true, routine will try to map non-existing region upon translation failure</param>
     /// <returns>Translated address</returns>
-    BLACKBONE_API ptr_t TranslateAddress( ptr_t address, bool resolveFault = true );
+    BRANDENBONE_API ptr_t TranslateAddress( ptr_t address, bool resolveFault = true );
 
     /// <summary>
     /// Setup one of the 4 possible memory hooks:
@@ -105,19 +105,19 @@ public:
     /// MemUnmapSection - hook NtUnmapViewOfSection
     /// </param>
     /// <returns>true on success</returns>
-    BLACKBONE_API NTSTATUS SetupHook( OperationType hkType );
+    BRANDENBONE_API NTSTATUS SetupHook( OperationType hkType );
 
     /// <summary>
     /// Restore previously hooked function
     /// </summary>
     /// <param name="hkType">Hook type. For more info see SetupHook</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool RestoreHook( OperationType hkType );
+    BRANDENBONE_API bool RestoreHook( OperationType hkType );
 
     /// <summary>
     /// Unmap any mapped memory, restore hooks and free resources
     /// </summary>
-    BLACKBONE_API void reset();
+    BRANDENBONE_API void reset();
 
 private:
     /// <summary>

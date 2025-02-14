@@ -5,7 +5,7 @@
 #include "../Symbols/SymbolData.h"
 #include "../Asm/LDasm.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 // taken from CRT include <Ehdata.h>
@@ -246,7 +246,7 @@ NTSTATUS MExcept::CreateVEH( Process& proc, ModuleData& mod, bool partial )
 
     _pVEHCode = std::move( mem.result() );
 
-    BLACKBONE_TRACE( "ManualMap: Vectored hander: 0x%p", _pVEHCode.ptr() );
+    BrandenBone_TRACE( "ManualMap: Vectored hander: 0x%p", _pVEHCode.ptr() );
 
     auto replaceStub = []( uint8_t* ptr, size_t size, auto oldVal, auto newVal )
     {

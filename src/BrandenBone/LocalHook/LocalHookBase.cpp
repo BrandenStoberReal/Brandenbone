@@ -1,6 +1,6 @@
 #include "LocalHookBase.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 std::unordered_map<void*, DetourBase*> DetourBase::_breakpoints;
 void* DetourBase::_vecHandler = nullptr;

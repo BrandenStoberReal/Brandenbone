@@ -1,7 +1,7 @@
 #pragma once
 #include "../Config.h"
 
-namespace blackbone
+namespace BrandenBone
 {
-BLACKBONE_API bool InitializeOnce();
+BRANDENBONE_API bool InitializeOnce();
 }

@@ -8,15 +8,15 @@
 #include <DbgHelp.h>
 #pragma warning(pop)
 
-namespace blackbone
+namespace BrandenBone
 {
-#ifndef BLACKBONE_NO_TRACE
+#ifndef BrandenBone_NO_TRACE
 
 inline void DoTraceV( const char* fmt, va_list va_args )
 {
     char buf[2048], userbuf[1024];
     vsprintf_s( userbuf, fmt, va_args );
-    sprintf_s( buf, "BlackBone: %s\r\n", userbuf );
+    sprintf_s( buf, "BrandenBone: %s\r\n", userbuf );
     OutputDebugStringA( buf );
 
 #ifdef CONSOLE_TRACE
@@ -28,7 +28,7 @@ inline void DoTraceV( const wchar_t* fmt, va_list va_args )
 {
     wchar_t buf[2048], userbuf[1024];
     vswprintf_s( userbuf, fmt, va_args );
-    swprintf_s( buf, L"BlackBone: %ls\r\n", userbuf );
+    swprintf_s( buf, L"BrandenBone: %ls\r\n", userbuf );
     OutputDebugStringW( buf );
 
 #ifdef CONSOLE_TRACE
@@ -45,10 +45,10 @@ inline void DoTrace( const Ch* fmt, ... )
     va_end( va_args );
 }
 
-#define BLACKBONE_TRACE(fmt, ...) DoTrace(fmt, ##__VA_ARGS__)
+#define BrandenBone_TRACE(fmt, ...) DoTrace(fmt, ##__VA_ARGS__)
 
 #else
-#define BLACKBONE_TRACE(...)
+#define BrandenBone_TRACE(...)
 #endif
 
 }

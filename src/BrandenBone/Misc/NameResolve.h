@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 class NameResolve
@@ -25,15 +25,15 @@ public:
     };
 
 public:
-    BLACKBONE_API ~NameResolve() = default;
+    BRANDENBONE_API ~NameResolve() = default;
 
-    BLACKBONE_API static NameResolve& Instance();
+    BRANDENBONE_API static NameResolve& Instance();
 
     /// <summary>
     /// Initialize api set map
     /// </summary>
     /// <returns></returns>
-    BLACKBONE_API bool Initialize();
+    BRANDENBONE_API bool Initialize();
 
     /// <summary>
     /// Resolve image path.
@@ -45,7 +45,7 @@ public:
     /// <param name="proc">Process. Used to search process executable directory</param>
     /// <param name="actx">Activation context</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS ResolvePath( 
+    BRANDENBONE_API NTSTATUS ResolvePath( 
         std::wstring& path,
         const std::wstring& baseName,
         const std::wstring& searchDir,
@@ -61,7 +61,7 @@ public:
     /// <param name="proc">Process. Used to search process executable directory</param>
     /// <param name="actx">Activation context</param>
     /// <returns></returns>
-    BLACKBONE_API NTSTATUS ProbeSxSRedirect( std::wstring& path, class Process& proc, HANDLE actx = INVALID_HANDLE_VALUE );
+    BRANDENBONE_API NTSTATUS ProbeSxSRedirect( std::wstring& path, class Process& proc, HANDLE actx = INVALID_HANDLE_VALUE );
 
 private:
     // Ensure singleton

@@ -3,7 +3,7 @@
 #include "../Config.h"
 #include "NativeStructures.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 // NtCreateEvent

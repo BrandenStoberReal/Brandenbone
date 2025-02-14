@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 AsmHelper64::AsmHelper64( )

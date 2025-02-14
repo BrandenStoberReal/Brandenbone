@@ -10,7 +10,7 @@
 #define THK32(ptr) ((const IMAGE_THUNK_DATA32*)ptr)     // Import thunk data
 #define THK64(ptr) ((const IMAGE_THUNK_DATA64*)ptr)     // Import thunk data
 
-namespace blackbone
+namespace BrandenBone
 {
 
 namespace pe
@@ -398,11 +398,11 @@ uintptr_t PEImage::ResolveRVAToVA( uintptr_t Rva, AddressType type /*= VA*/ ) co
 {
     switch (type)
     {
-    case blackbone::pe::RVA:
+    case BrandenBone::pe::RVA:
         return Rva;
 
-    case blackbone::pe::VA:
-    case blackbone::pe::RPA:
+    case BrandenBone::pe::VA:
+    case BrandenBone::pe::RPA:
         if (_isPlainData)
         {
             for (auto& sec : _sections)

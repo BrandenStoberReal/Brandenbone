@@ -11,7 +11,7 @@
 #include <cassert>
 
 
-namespace blackbone
+namespace BrandenBone
 {
 
 enum CreateThreadFlags
@@ -27,10 +27,10 @@ ENUM_OPS(CreateThreadFlags)
 class Native
 {
 public:
-    BLACKBONE_API Native( HANDLE hProcess, bool x86OS = false );
-    BLACKBONE_API ~Native();
+    BRANDENBONE_API Native( HANDLE hProcess, bool x86OS = false );
+    BRANDENBONE_API ~Native();
 
-    BLACKBONE_API inline const Wow64Barrier& GetWow64Barrier() const { return _wowBarrier; }
+    BRANDENBONE_API inline const Wow64Barrier& GetWow64Barrier() const { return _wowBarrier; }
 
     /// <summary>
     /// Allocate virtual memory
@@ -200,7 +200,7 @@ public:
     /// </summary>
     /// <param name="includeFree">If true - non-allocated regions will be included in list</param>
     /// <returns>Found regions</returns>>
-    BLACKBONE_API std::vector<MEMORY_BASIC_INFORMATION64> EnumRegions( bool includeFree = false );
+    BRANDENBONE_API std::vector<MEMORY_BASIC_INFORMATION64> EnumRegions( bool includeFree = false );
 
     /// <summary>
     /// Enumerate process modules
@@ -208,31 +208,31 @@ public:
     /// <param name="result">Found modules</param>
     /// <param name="mtype">Module type: x86 or x64</param>
     /// <returns>Module count</returns>
-    BLACKBONE_API std::vector<ModuleDataPtr> EnumModules( eModSeachType search = LdrList, eModType mtype = mt_default );
+    BRANDENBONE_API std::vector<ModuleDataPtr> EnumModules( eModSeachType search = LdrList, eModType mtype = mt_default );
 
     /// <summary>
     /// Get lowest possible valid address value
     /// </summary>
     /// <returns>Address value</returns>
-    BLACKBONE_API inline ptr_t minAddr() const { return 0x10000; }
+    BRANDENBONE_API inline ptr_t minAddr() const { return 0x10000; }
 
     /// <summary>
     /// Get highest possible valid address value
     /// </summary>
     /// <returns>Address value</returns>
-    BLACKBONE_API inline ptr_t maxAddr() const { return 0x7FFFFFFEFFFF; }
+    BRANDENBONE_API inline ptr_t maxAddr() const { return 0x7FFFFFFEFFFF; }
     
     /// <summary>
     /// Get highest possible valid address value
     /// </summary>
     /// <returns>Address value</returns>
-    BLACKBONE_API inline ptr_t maxAddr32() const { return 0x7FFFFFFF; }
+    BRANDENBONE_API inline ptr_t maxAddr32() const { return 0x7FFFFFFF; }
                                                                         
     /// <summary>
     /// Get page size
     /// </summary>
     /// <returns>Address value</returns>
-    BLACKBONE_API inline uint32_t pageSize() const { return _pageSize; }
+    BRANDENBONE_API inline uint32_t pageSize() const { return _pageSize; }
 private:
 
     /// <summary>

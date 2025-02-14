@@ -10,7 +10,7 @@
 
 #include <memory>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 #define DEFAULT_ACCESS_T  THREAD_SUSPEND_RESUME    | \
@@ -94,83 +94,83 @@ struct regDR7
 class Thread
 {
 public:
-    BLACKBONE_API Thread( DWORD id, class ProcessCore* hProcess, DWORD access = DEFAULT_ACCESS_T );
-    BLACKBONE_API Thread( HANDLE handle, class ProcessCore* hProcess );
-    BLACKBONE_API ~Thread();
+    BRANDENBONE_API Thread( DWORD id, class ProcessCore* hProcess, DWORD access = DEFAULT_ACCESS_T );
+    BRANDENBONE_API Thread( HANDLE handle, class ProcessCore* hProcess );
+    BRANDENBONE_API ~Thread();
 
-    BLACKBONE_API Thread( const Thread& ) = delete;
-    BLACKBONE_API Thread& operator =( const Thread& ) = delete;
+    BRANDENBONE_API Thread( const Thread& ) = delete;
+    BRANDENBONE_API Thread& operator =( const Thread& ) = delete;
 
-    BLACKBONE_API Thread( Thread&& ) = default;
-    BLACKBONE_API Thread& operator =( Thread&& ) = default;
+    BRANDENBONE_API Thread( Thread&& ) = default;
+    BRANDENBONE_API Thread& operator =( Thread&& ) = default;
 
     /// <summary>
     /// Get thread ID
     /// </summary>
     /// <returns>Thread ID</returns>
-    BLACKBONE_API DWORD id() const { return _id; }
+    BRANDENBONE_API DWORD id() const { return _id; }
 
     /// <summary>
     /// Get thread handle
     /// </summary>
     /// <returns>Thread hande</returns>
-    BLACKBONE_API HANDLE handle() const { return _handle; }
+    BRANDENBONE_API HANDLE handle() const { return _handle; }
 
     /// <summary>
     /// Check if thread exists
     /// </summary>
     /// <returns>true if thread exists</returns>
-    BLACKBONE_API bool valid() const { return (_handle && ExitCode() == STILL_ACTIVE); }
+    BRANDENBONE_API bool valid() const { return (_handle && ExitCode() == STILL_ACTIVE); }
 
     /// <summary>
     /// Get WOW64 TEB
     /// </summary>
     /// <param name="pteb">Process TEB</param>
     /// <returns>TEB pointer</returns>
-    BLACKBONE_API ptr_t teb( _TEB32* pteb ) const;
+    BRANDENBONE_API ptr_t teb( _TEB32* pteb ) const;
    
     /// <summary>
     /// Get Native TEB
     /// </summary>
     /// <param name="pteb">Process TEB</param>
     /// <returns>TEB pointer</returns>
-    BLACKBONE_API ptr_t teb( _TEB64* pteb ) const;
+    BRANDENBONE_API ptr_t teb( _TEB64* pteb ) const;
 
     /// <summary>
     /// Get TEB
     /// </summary>
     /// <returns>TEB pointer</returns>
-    BLACKBONE_API ptr_t teb() const { return teb( (TEB_T*)nullptr ); }
+    BRANDENBONE_API ptr_t teb() const { return teb( (TEB_T*)nullptr ); }
 
     /// <summary>
     /// Get thread creation time
     /// </summary>
     /// <returns>Thread creation time</returns>
-    BLACKBONE_API uint64_t startTime() const;
+    BRANDENBONE_API uint64_t startTime() const;
 
     /// <summary>
     /// Get total execution time(user mode and kernel mode)
     /// </summary>
     /// <returns>Total execution time</returns>
-    BLACKBONE_API uint64_t execTime() const;
+    BRANDENBONE_API uint64_t execTime() const;
 
     /// <summary>
     /// Suspend thread
     /// </summary>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool Suspend();
+    BRANDENBONE_API bool Suspend();
 
     /// <summary>
     /// Resumes thread.
     /// </summary>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool Resume();
+    BRANDENBONE_API bool Resume();
 
     /// <summary>
     /// Check if thread is suspended
     /// </summary>
     /// <returns>true if suspended</returns>
-    BLACKBONE_API bool Suspended();
+    BRANDENBONE_API bool Suspended();
 
     /// <summary>
     /// Get WOW64 thread context
@@ -179,7 +179,7 @@ public:
     /// <param name="flags">Context flags.</param>
     /// <param name="dontSuspend">true if thread shouldn't be suspended before retrieving context</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS GetContext( _CONTEXT32& ctx, DWORD flags = CONTEXT_ALL, bool dontSuspend = false );
+    BRANDENBONE_API NTSTATUS GetContext( _CONTEXT32& ctx, DWORD flags = CONTEXT_ALL, bool dontSuspend = false );
 
     /// <summary>
     /// Get native thread context
@@ -188,7 +188,7 @@ public:
     /// <param name="flags">Context flags.</param>
     /// <param name="dontSuspend">true if thread shouldn't be suspended before retrieving context</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS GetContext( _CONTEXT64& ctx, DWORD flags = CONTEXT64_ALL, bool dontSuspend = false );
+    BRANDENBONE_API NTSTATUS GetContext( _CONTEXT64& ctx, DWORD flags = CONTEXT64_ALL, bool dontSuspend = false );
 
     /// <summary>
     /// Set WOW64 thread context
@@ -196,7 +196,7 @@ public:
     /// <param name="ctx">Context to set</param>
     /// <param name="dontSuspend">true if thread shouldn't be suspended before retrieving context</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS SetContext( _CONTEXT32& ctx, bool dontSuspend = false );
+    BRANDENBONE_API NTSTATUS SetContext( _CONTEXT32& ctx, bool dontSuspend = false );
 
     /// <summary>
     /// Set native thread context
@@ -204,27 +204,27 @@ public:
     /// <param name="ctx">Context to set</param>
     /// <param name="dontSuspend">true if thread shouldn't be suspended before retrieving context</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS SetContext( _CONTEXT64& ctx, bool dontSuspend = false );
+    BRANDENBONE_API NTSTATUS SetContext( _CONTEXT64& ctx, bool dontSuspend = false );
 
     /// <summary>
     /// Terminate thread
     /// </summary>
     /// <param name="code">Exit code</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Terminate( DWORD code = 0 );
+    BRANDENBONE_API NTSTATUS Terminate( DWORD code = 0 );
 
     /// <summary>
     /// Join thread
     /// </summary>
     /// <param name="timeout">Join timeout</param>
     /// <returns>true on success</returns>
-    BLACKBONE_API bool Join( int timeout = INFINITE );
+    BRANDENBONE_API bool Join( int timeout = INFINITE );
 
     /// <summary>
     /// Get thread exit code
     /// </summary>
     /// <returns>Thread exit code</returns>
-    BLACKBONE_API DWORD ExitCode() const;
+    BRANDENBONE_API DWORD ExitCode() const;
 
     /// <summary>
     /// Add hardware breakpoint to thread
@@ -233,28 +233,28 @@ public:
     /// <param name="type">Breakpoint type(read/write/execute)</param>
     /// <param name="length">Number of bytes to include into breakpoint</param>
     /// <returns>Index of used breakpoint; -1 if failed</returns>
-    BLACKBONE_API call_result_t<int> AddHWBP( ptr_t addr, HWBPType type, HWBPLength length );
+    BRANDENBONE_API call_result_t<int> AddHWBP( ptr_t addr, HWBPType type, HWBPLength length );
 
     /// <summary>
     /// Remove existing hardware breakpoint
     /// </summary>
     /// <param name="idx">Breakpoint index</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS RemoveHWBP( int idx );
+    BRANDENBONE_API NTSTATUS RemoveHWBP( int idx );
 
     /// <summary>
     /// Remove existing hardware breakpoint
     /// </summary>
     /// <param name="ptr">Breakpoint address</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS RemoveHWBP( ptr_t ptr );
+    BRANDENBONE_API NTSTATUS RemoveHWBP( ptr_t ptr );
 
     /// <summary>
     /// Close handle
     /// </summary>
-    BLACKBONE_API void Close();
+    BRANDENBONE_API void Close();
 
-    BLACKBONE_API inline bool operator ==( const Thread& other ) { return (_id == other._id); }
+    BRANDENBONE_API inline bool operator ==( const Thread& other ) { return (_id == other._id); }
 
 private:
     /// <summary>

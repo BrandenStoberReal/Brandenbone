@@ -7,7 +7,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 struct OffsetData
@@ -315,27 +315,27 @@ NTSTATUS ScanSymbolPatterns( const pe::PEImage& ntdll32, const pe::PEImage& ntdl
     }
 
     // Report errors
-#ifndef BLACKBONE_NO_TRACE
+#ifndef BrandenBone_NO_TRACE
     if (result.LdrpHandleTlsData64 == 0)
-        BLACKBONE_TRACE( "PatternData: LdrpHandleTlsData64 not found" );
+        BrandenBone_TRACE( "PatternData: LdrpHandleTlsData64 not found" );
     if (result.LdrpHandleTlsData32 == 0)
-        BLACKBONE_TRACE( "PatternData: LdrpHandleTlsData32 not found" );
+        BrandenBone_TRACE( "PatternData: LdrpHandleTlsData32 not found" );
     if (IsWindows8Point1OrGreater() && result.LdrpInvertedFunctionTable64 == 0)
-        BLACKBONE_TRACE( "PatternData: LdrpInvertedFunctionTable64 not found" );
+        BrandenBone_TRACE( "PatternData: LdrpInvertedFunctionTable64 not found" );
     if (result.LdrpInvertedFunctionTable32 == 0)
-        BLACKBONE_TRACE( "PatternData: LdrpInvertedFunctionTable32 not found" );
+        BrandenBone_TRACE( "PatternData: LdrpInvertedFunctionTable32 not found" );
     if (IsWindows8Point1OrGreater() && result.RtlInsertInvertedFunctionTable64 == 0)
-        BLACKBONE_TRACE( "PatternData: RtlInsertInvertedFunctionTable64 not found" );
+        BrandenBone_TRACE( "PatternData: RtlInsertInvertedFunctionTable64 not found" );
     if (result.RtlInsertInvertedFunctionTable32 == 0)
-        BLACKBONE_TRACE( "PatternData: RtlInsertInvertedFunctionTable32 not found" );
+        BrandenBone_TRACE( "PatternData: RtlInsertInvertedFunctionTable32 not found" );
     if (IsWindows8Point1OrGreater() && result.LdrProtectMrdata == 0)
-        BLACKBONE_TRACE( "PatternData: LdrProtectMrdata not found" );
+        BrandenBone_TRACE( "PatternData: LdrProtectMrdata not found" );
     if (IsWindows7OrGreater() && !IsWindows8OrGreater())
     {
         if (result.LdrKernel32PatchAddress == 0)
-            BLACKBONE_TRACE( "PatternData: LdrKernel32PatchAddress not found" );
+            BrandenBone_TRACE( "PatternData: LdrKernel32PatchAddress not found" );
         if (result.APC64PatchAddress == 0)
-            BLACKBONE_TRACE( "PatternData: APC64PatchAddress not found" );
+            BrandenBone_TRACE( "PatternData: APC64PatchAddress not found" );
     }
 #endif
 

@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <memory>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>
@@ -81,7 +81,7 @@ public:
     /// <summary>
     /// MemBlock ctor
     /// </summary>
-    BLACKBONE_API MemBlock() = default;
+    BRANDENBONE_API MemBlock() = default;
 
     /// <summary>
     /// MemBlock ctor
@@ -89,7 +89,7 @@ public:
     /// <param name="mem">Process memory routines</param>
     /// <param name="ptr">Memory address</param>
     /// <param name="own">true if caller will be responsible for block deallocation</param>
-    BLACKBONE_API MemBlock( class ProcessMemory* mem, ptr_t ptr, bool own = true );
+    BRANDENBONE_API MemBlock( class ProcessMemory* mem, ptr_t ptr, bool own = true );
 
     /// <summary>
     /// MemBlock ctor
@@ -99,14 +99,14 @@ public:
     /// <param name="size">Block size</param>
     /// <param name="prot">Memory protection</param>
     /// <param name="own">true if caller will be responsible for block deallocation</param>
-    BLACKBONE_API MemBlock( class ProcessMemory* mem, ptr_t ptr, size_t size, DWORD prot, bool own = true, bool physical = false );
+    BRANDENBONE_API MemBlock( class ProcessMemory* mem, ptr_t ptr, size_t size, DWORD prot, bool own = true, bool physical = false );
 
     /// <summary>
     /// Move ctor
     /// </summary>
     /// <param name="rhs">Move from</param>
-    BLACKBONE_API MemBlock( MemBlock&& rhs ) { _pImpl.swap( rhs._pImpl ); }
-    BLACKBONE_API MemBlock& operator = ( MemBlock&& rhs )
+    BRANDENBONE_API MemBlock( MemBlock&& rhs ) { _pImpl.swap( rhs._pImpl ); }
+    BRANDENBONE_API MemBlock& operator = ( MemBlock&& rhs )
     { 
         // Self assign
         if (_pImpl == rhs._pImpl)
@@ -125,7 +125,7 @@ public:
     /// <param name="protection">Win32 Memory protection flags</param>
     /// <param name="own">false if caller will be responsible for block deallocation</param>
     /// <returns>Memory block. If failed - returned block will be invalid</returns>
-    BLACKBONE_API static call_result_t<MemBlock> Allocate(
+    BRANDENBONE_API static call_result_t<MemBlock> Allocate(
         class ProcessMemory& process,
         size_t size,
         ptr_t desired = 0,
@@ -142,7 +142,7 @@ public:
     /// <param name="protection">Win32 Memory protection flags</param>
     /// <param name="own">false if caller will be responsible for block deallocation</param>
     /// <returns>Memory block. If failed - returned block will be invalid</returns>
-    BLACKBONE_API static call_result_t<MemBlock> AllocateClosest(
+    BRANDENBONE_API static call_result_t<MemBlock> AllocateClosest(
     	class ProcessMemory& process,
         size_t size,
         ptr_t desired,
@@ -157,7 +157,7 @@ public:
     /// <param name="desired">Desired base address of new block</param>
     /// <param name="protection">Memory protection</param>
     /// <returns>New block address</returns>
-    BLACKBONE_API call_result_t<ptr_t> Realloc( size_t size, ptr_t desired = 0, DWORD protection = PAGE_EXECUTE_READWRITE );
+    BRANDENBONE_API call_result_t<ptr_t> Realloc( size_t size, ptr_t desired = 0, DWORD protection = PAGE_EXECUTE_READWRITE );
 
     /// <summary>
     /// Change memory protection
@@ -167,13 +167,13 @@ public:
     /// <param name="size">Block size</param>
     /// <param name="pOld">Old protection flags</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Protect( DWORD protection, uintptr_t offset = 0, size_t size = 0, DWORD* pOld = nullptr );
+    BRANDENBONE_API NTSTATUS Protect( DWORD protection, uintptr_t offset = 0, size_t size = 0, DWORD* pOld = nullptr );
 
     /// <summary>
     /// Free memory
     /// </summary>
     /// <param name="size">Size of memory chunk to free. If 0 - whole block is freed</param>
-    BLACKBONE_API NTSTATUS Free( size_t size = 0 );
+    BRANDENBONE_API NTSTATUS Free( size_t size = 0 );
 
     /// <summary>
     /// Read data
@@ -186,7 +186,7 @@ public:
     /// Otherwise function will fail if there is at least one non-committed page in region.
     /// </param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Read( uintptr_t offset, size_t size, PVOID pResult, bool handleHoles = false );
+    BRANDENBONE_API NTSTATUS Read( uintptr_t offset, size_t size, PVOID pResult, bool handleHoles = false );
 
     /// <summary>
     /// Write data
@@ -195,7 +195,7 @@ public:
     /// <param name="size">Size of data to write</param>
     /// <param name="pData">Buffer to write</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Write( uintptr_t offset, size_t size, const void* pData );
+    BRANDENBONE_API NTSTATUS Write( uintptr_t offset, size_t size, const void* pData );
 
     /// <summary>
     /// Read data
@@ -238,12 +238,12 @@ public:
     /// <summary>
     /// Try to free memory and reset pointers
     /// </summary>
-    BLACKBONE_API void Reset();
+    BRANDENBONE_API void Reset();
 
     /// <summary>
     /// Memory will not be deallocated upon object destruction
     /// </summary>
-    BLACKBONE_API inline void Release() { if (_pImpl) _pImpl->_own = false; }
+    BRANDENBONE_API inline void Release() { if (_pImpl) _pImpl->_own = false; }
 
     /// <summary>
     /// Get memory pointer
@@ -256,24 +256,24 @@ public:
     /// Get block size
     /// </summary>
     /// <returns>Block size</returns>
-    BLACKBONE_API inline size_t size() const { return _pImpl ? _pImpl->_size : 0; }
+    BRANDENBONE_API inline size_t size() const { return _pImpl ? _pImpl->_size : 0; }
 
     /// <summary>
     /// Get block memory protection
     /// </summary>
     /// <returns>Memory protection flags</returns>
-    BLACKBONE_API inline DWORD  protection() const { return _pImpl ? _pImpl->_protection : 0; }
+    BRANDENBONE_API inline DWORD  protection() const { return _pImpl ? _pImpl->_protection : 0; }
 
     /// <summary>
     /// Validate memory block
     /// <returns>true if memory pointer isn't 0</returns>
-    BLACKBONE_API inline bool valid() const { return( _pImpl.get() != nullptr && _pImpl->_ptr != 0); }
+    BRANDENBONE_API inline bool valid() const { return( _pImpl.get() != nullptr && _pImpl->_ptr != 0); }
 
     /// <summary>
     /// Get memory pointer
     /// </summary>
     /// <returns>Memory pointer</returns>
-    BLACKBONE_API inline operator ptr_t() const  { return _pImpl ? _pImpl->_ptr : 0; }
+    BRANDENBONE_API inline operator ptr_t() const  { return _pImpl ? _pImpl->_ptr : 0; }
 
 private:
     std::shared_ptr<MemBlockImpl> _pImpl;

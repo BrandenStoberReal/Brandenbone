@@ -7,7 +7,7 @@
 #include <map>
 #include <unordered_map>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 enum TraceState
@@ -74,7 +74,7 @@ public:
 
 public:
     ~TraceHook();
-    BLACKBONE_API static TraceHook& Instance();
+    BRANDENBONE_API static TraceHook& Instance();
 
     /// <summary>
     /// Setup hook
@@ -85,7 +85,7 @@ public:
     /// <param name="tracePath">Function tracing path</param>
     /// <param name="checkIP">Optional. Address of instruction that checks target pointer</param>
     /// <returns>true on success, false if already hooked</returns>
-    BLACKBONE_API bool ApplyHook( void* targetFunc,
+    BRANDENBONE_API bool ApplyHook( void* targetFunc,
                                   void* hookFunc,
                                   void* ptrAddress,
                                   const HookContext::vecState& tracePath = HookContext::vecState(),
@@ -96,7 +96,7 @@ public:
     /// </summary>
     /// <param name="targetFunc">Target function ptr</param>
     /// <returns>true on success, false if not found</returns>
-    BLACKBONE_API bool RemoveHook( void* targetFunc );
+    BRANDENBONE_API bool RemoveHook( void* targetFunc );
 
 private:
     // 

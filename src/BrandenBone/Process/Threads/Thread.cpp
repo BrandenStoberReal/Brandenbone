@@ -3,7 +3,7 @@
 #include "../../Misc/DynImport.h"
 #include "../../Include/Macro.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 Thread::Thread( DWORD id, ProcessCore* core, DWORD access /*= DEFAULT_ACCESS*/ )
@@ -30,7 +30,7 @@ Thread::~Thread()
 /// </summary>
 /// <param name="pteb">Process TEB</param>
 /// <returns>TEB pointer</returns>
-blackbone::ptr_t Thread::teb( _TEB32* pteb ) const
+BrandenBone::ptr_t Thread::teb( _TEB32* pteb ) const
 {
     return _core->native()->getTEB( _handle, pteb );
 }
@@ -40,7 +40,7 @@ blackbone::ptr_t Thread::teb( _TEB32* pteb ) const
 /// </summary>
 /// <param name="pteb">Process TEB</param>
 /// <returns>TEB pointer</returns>
-blackbone::ptr_t Thread::teb( _TEB64* pteb ) const
+BrandenBone::ptr_t Thread::teb( _TEB64* pteb ) const
 {
     return _core->native()->getTEB( _handle, pteb );
 }

@@ -9,12 +9,12 @@
     HRESULT hresult = (e); \
     if(FAILED(hresult)) \
     { \
-        BLACKBONE_TRACE( "PDB: %s: (%s) failed with HRESULT 0x%08x", __FUNCTION__, #e , hresult ); \
+        BrandenBone_TRACE( "PDB: %s: (%s) failed with HRESULT 0x%08x", __FUNCTION__, #e , hresult ); \
         return hresult; \
     } \
 }
 
-namespace blackbone
+namespace BrandenBone
 {
 
 PDBHelper::PDBHelper()
@@ -97,7 +97,7 @@ HRESULT PDBHelper::CoCreateDiaDataSource()
         if (!hMod)
         {
             const auto err = GetLastError();
-            BLACKBONE_TRACE( "PDB: Failed to load msdia140.dll, error 0x%08x", err );
+            BrandenBone_TRACE( "PDB: Failed to load msdia140.dll, error 0x%08x", err );
             return HRESULT_FROM_WIN32( err );
         }
 
@@ -105,7 +105,7 @@ HRESULT PDBHelper::CoCreateDiaDataSource()
         if (!DllGetClassObject)
         {
             const auto err = GetLastError();
-            BLACKBONE_TRACE( "PDB: Failed to get DllGetClassObject from msdia140.dll" );
+            BrandenBone_TRACE( "PDB: Failed to get DllGetClassObject from msdia140.dll" );
             return HRESULT_FROM_WIN32( err );
         }
 
@@ -116,7 +116,7 @@ HRESULT PDBHelper::CoCreateDiaDataSource()
 
     if (FAILED( hr ))
     {
-        BLACKBONE_TRACE( "PDB: %s failed with HRESULT 0x%08x", __FUNCTION__, hr );
+        BrandenBone_TRACE( "PDB: %s failed with HRESULT 0x%08x", __FUNCTION__, hr );
     }
 
     return hr;

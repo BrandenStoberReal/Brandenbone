@@ -8,7 +8,7 @@
 
 #include <3rd_party/VersionApi.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 NtLdr::NtLdr( Process& proc )
@@ -52,13 +52,13 @@ bool NtLdr::Init( eModType initFor /*= mt_default*/ )
     _nodeMap.clear();
 
     // Report errors
-#ifndef BLACKBONE_NO_TRACE
+#ifndef BrandenBone_NO_TRACE
     if (_LdrHeapBase == 0)
-        BLACKBONE_TRACE( "NativeLdr: LdrHeapBase not found" );
+        BrandenBone_TRACE( "NativeLdr: LdrHeapBase not found" );
     if (_LdrpHashTable == 0)
-        BLACKBONE_TRACE( "NativeLdr: LdrpHashTable not found" );
+        BrandenBone_TRACE( "NativeLdr: LdrpHashTable not found" );
     if (IsWindows8OrGreater() && _LdrpModuleIndexBase == 0)
-        BLACKBONE_TRACE( "NativeLdr: LdrpModuleIndexBase not found" );
+        BrandenBone_TRACE( "NativeLdr: LdrpModuleIndexBase not found" );
 #endif
 
     return true;

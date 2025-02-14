@@ -13,7 +13,7 @@
 #define ARGS_OFFSET     0x20
 
 
-namespace blackbone
+namespace BrandenBone
 {
 
 enum WorkerThreadMode
@@ -28,8 +28,8 @@ class RemoteExec
     using vecArgs = std::vector<AsmVariant>;
 
 public:
-    BLACKBONE_API RemoteExec( class Process& proc );
-    BLACKBONE_API ~RemoteExec();
+    BRANDENBONE_API RemoteExec( class Process& proc );
+    BRANDENBONE_API ~RemoteExec();
 
     /// <summary>
     /// Create environment for future remote procedure calls
@@ -44,7 +44,7 @@ public:
     /// <param name="mode">Worket thread mode</param>
     /// <param name="bEvent">Create sync event for worker thread</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS CreateRPCEnvironment( WorkerThreadMode mode = Worker_None, bool bEvent = false );
+    BRANDENBONE_API NTSTATUS CreateRPCEnvironment( WorkerThreadMode mode = Worker_None, bool bEvent = false );
 
     /// <summary>
     /// Create new thread and execute code in it. Wait until execution ends
@@ -54,7 +54,7 @@ public:
     /// <param name="callResult">Code return value</param>
     /// <param name="modeSwitch">Switch wow64 thread to long mode upon creation</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS ExecInNewThread(
+    BRANDENBONE_API NTSTATUS ExecInNewThread(
         PVOID pCode, size_t size, 
         uint64_t& callResult, 
         eThreadModeSwitch modeSwitch = AutoSwitch 
@@ -67,7 +67,7 @@ public:
     /// <param name="size">Code size.</param>
     /// <param name="callResult">Execution result</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS ExecInWorkerThread( PVOID pCode, size_t size, uint64_t& callResult );
+    BRANDENBONE_API NTSTATUS ExecInWorkerThread( PVOID pCode, size_t size, uint64_t& callResult );
 
     /// <summary>
     /// Execute code in context of any existing thread
@@ -77,7 +77,7 @@ public:
     /// <param name="callResult">Execution result</param>
     /// <param name="thd">Target thread</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS ExecInAnyThread( PVOID pCode, size_t size, uint64_t& callResult, ThreadPtr& thread );
+    BRANDENBONE_API NTSTATUS ExecInAnyThread( PVOID pCode, size_t size, uint64_t& callResult, ThreadPtr& thread );
 
     /// <summary>
     /// Create new thread with specified entry point and argument
@@ -85,7 +85,7 @@ public:
     /// <param name="pCode">Entry point</param>
     /// <param name="arg">Thread function argument</param>
     /// <returns>Thread exit code</returns>
-    BLACKBONE_API DWORD ExecDirect( ptr_t pCode, ptr_t arg );
+    BRANDENBONE_API DWORD ExecDirect( ptr_t pCode, ptr_t arg );
 
     /// <summary>
     /// Generate assembly code for remote call.
@@ -96,10 +96,10 @@ public:
     /// <param name="cc">Calling convention</param>
     /// <param name="retType">Return type</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS PrepareCallAssembly(
+    BRANDENBONE_API NTSTATUS PrepareCallAssembly(
         IAsmHelper& a,
         ptr_t pfn,
-        std::vector<blackbone::AsmVariant>& args,
+        std::vector<BrandenBone::AsmVariant>& args,
         eCalligConvention cc,
         eReturnType retType
     );
@@ -111,7 +111,7 @@ public:
     /// <param name="mt">32/64bit loader</param>
     /// <param name="retType">Function return type</param>
     /// <param name="retOffset">Return value offset</param>
-    BLACKBONE_API void AddReturnWithEvent(
+    BRANDENBONE_API void AddReturnWithEvent(
         IAsmHelper& a,
         eModType mt = mt_default, 
         eReturnType retType = rt_int32,
@@ -122,7 +122,7 @@ public:
     /// Save value in rax to user buffer
     /// </summary>
     /// <param name="a">Target assembly helper</param>
-    BLACKBONE_API void SaveCallResult( IAsmHelper& a, uint32_t retOffset = RET_OFFSET )
+    BRANDENBONE_API void SaveCallResult( IAsmHelper& a, uint32_t retOffset = RET_OFFSET )
     {
         a->mov( a->zdx, _userData[_currentBufferIdx].ptr() + retOffset );
         a->mov( asmjit::host::dword_ptr( a->zdx ), a->zax );
@@ -153,7 +153,7 @@ public:
     /// Retrieve last NTSTATUS code
     /// </summary>
     /// <returns></returns>
-    BLACKBONE_API NTSTATUS GetLastStatus()
+    BRANDENBONE_API NTSTATUS GetLastStatus()
     {
         return _userData[_currentBufferIdx].Read<NTSTATUS>( ERR_OFFSET, STATUS_NOT_FOUND );
     }
@@ -161,30 +161,30 @@ public:
     /// <summary>
     /// Terminate existing worker thread
     /// </summary>
-    BLACKBONE_API void TerminateWorker();
+    BRANDENBONE_API void TerminateWorker();
 
     /// <summary>
     /// Get worker thread
     /// </summary>
     /// <returns></returns>
-    BLACKBONE_API ThreadPtr getWorker() { return _workerThread; }
+    BRANDENBONE_API ThreadPtr getWorker() { return _workerThread; }
 
     /// <summary>
     /// Get execution thread
     /// </summary>
     /// <returns></returns>
-    BLACKBONE_API ThreadPtr getExecThread() { return _hijackThread ? _hijackThread : _workerThread; }
+    BRANDENBONE_API ThreadPtr getExecThread() { return _hijackThread ? _hijackThread : _workerThread; }
 
     /// <summary>
     /// Ge memory routines
     /// </summary>
     /// <returns></returns>
-    BLACKBONE_API class ProcessMemory& memory() { return _memory; }
+    BRANDENBONE_API class ProcessMemory& memory() { return _memory; }
 
     /// <summary>
     /// Reset instance
     /// </summary>
-    BLACKBONE_API void reset();
+    BRANDENBONE_API void reset();
 
 private:
 

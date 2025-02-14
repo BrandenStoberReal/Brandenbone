@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 class PDBHelper

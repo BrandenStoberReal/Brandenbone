@@ -2,9 +2,9 @@
 
 #include "LocalHookBase.h"
 
-namespace blackbone
+namespace BrandenBone
 {
-    class BLACKBONE_API NoClass { };
+    class BRANDENBONE_API NoClass { };
 
     template<typename Fn, class C>
     struct HookHandler;

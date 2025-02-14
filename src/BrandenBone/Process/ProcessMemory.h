@@ -7,7 +7,7 @@
 #include <vector>
 #include <list>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 
@@ -20,8 +20,8 @@ enum class MemProtectionCasting
 class ProcessMemory : public RemoteMemory
 {
 public:
-    BLACKBONE_API ProcessMemory( class Process* process );
-    BLACKBONE_API ~ProcessMemory();
+    BRANDENBONE_API ProcessMemory( class Process* process );
+    BRANDENBONE_API ~ProcessMemory();
 
     /// <summary>
     /// Allocate new memory block
@@ -31,7 +31,7 @@ public:
     /// <param name="desired">Desired base address of new block</param>
     /// <param name="desired">false if caller will be responsible for block deallocation</param>
     /// <returns>Memory block. If failed - returned block will be invalid</returns>
-    BLACKBONE_API call_result_t<MemBlock> Allocate( size_t size, DWORD protection = PAGE_EXECUTE_READWRITE, ptr_t desired = 0, bool own = true );
+    BRANDENBONE_API call_result_t<MemBlock> Allocate( size_t size, DWORD protection = PAGE_EXECUTE_READWRITE, ptr_t desired = 0, bool own = true );
 
     /// <summary>
     /// Allocate new memory block as close to a desired location as possible
@@ -41,7 +41,7 @@ public:
     /// <param name="desired">Desired base address of new block</param>
     /// <param name="desired">false if caller will be responsible for block deallocation</param>
     /// <returns>Memory block. If failed - returned block will be invalid</returns>
-    BLACKBONE_API call_result_t<MemBlock> AllocateClosest( size_t size, DWORD protection = PAGE_EXECUTE_READWRITE, ptr_t desired = 0, bool own = true );
+    BRANDENBONE_API call_result_t<MemBlock> AllocateClosest( size_t size, DWORD protection = PAGE_EXECUTE_READWRITE, ptr_t desired = 0, bool own = true );
 
     /// <summary>
     /// Free memory
@@ -50,7 +50,7 @@ public:
     /// <param name="size">Region size</param>
     /// <param name="freeType">Release/decommit</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Free( ptr_t pAddr, size_t size = 0, DWORD freeType = MEM_RELEASE );
+    BRANDENBONE_API NTSTATUS Free( ptr_t pAddr, size_t size = 0, DWORD freeType = MEM_RELEASE );
 
     /// <summary>
     /// Get memory region info
@@ -58,7 +58,7 @@ public:
     /// <param name="pAddr">Memory address</param>
     /// <param name="pInfo">Retrieved info</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Query( ptr_t pAddr, PMEMORY_BASIC_INFORMATION64 pInfo );
+    BRANDENBONE_API NTSTATUS Query( ptr_t pAddr, PMEMORY_BASIC_INFORMATION64 pInfo );
 
     /// <summary>
     /// Change memory protection
@@ -68,7 +68,7 @@ public:
     /// <param name="flProtect">New memory protection flags</param>
     /// <param name="pOld">Old protection flags</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Protect( ptr_t pAddr, size_t size, DWORD flProtect, DWORD *pOld = NULL );
+    BRANDENBONE_API NTSTATUS Protect( ptr_t pAddr, size_t size, DWORD flProtect, DWORD *pOld = NULL );
 
     /// <summary>
     /// Read data
@@ -81,7 +81,7 @@ public:
     /// Otherwise function will fail if there is at least one non-committed page in region.
     /// </param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Read( ptr_t dwAddress, size_t dwSize, PVOID pResult, bool handleHoles = false );
+    BRANDENBONE_API NTSTATUS Read( ptr_t dwAddress, size_t dwSize, PVOID pResult, bool handleHoles = false );
 
     /// <summary>
     /// Read data
@@ -94,7 +94,7 @@ public:
     /// Otherwise function will fail if there is at least one non-committed page in region.
     /// </param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Read( const std::vector<ptr_t>& adrList, size_t dwSize, PVOID pResult, bool handleHoles = false );
+    BRANDENBONE_API NTSTATUS Read( const std::vector<ptr_t>& adrList, size_t dwSize, PVOID pResult, bool handleHoles = false );
 
     /// <summary>
     /// Write data
@@ -103,7 +103,7 @@ public:
     /// <param name="dwSize">Size of data to write</param>
     /// <param name="pData">Buffer to write</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Write( ptr_t pAddress, size_t dwSize, const void* pData );
+    BRANDENBONE_API NTSTATUS Write( ptr_t pAddress, size_t dwSize, const void* pData );
 
     /// <summary>
     /// Write data
@@ -112,7 +112,7 @@ public:
     /// <param name="dwSize">Size of data to write</param>
     /// <param name="pData">Buffer to write</param>
     /// <returns>Status</returns>
-    BLACKBONE_API NTSTATUS Write( const std::vector<ptr_t>& adrList, size_t dwSize, const void* pData );
+    BRANDENBONE_API NTSTATUS Write( const std::vector<ptr_t>& adrList, size_t dwSize, const void* pData );
 
     /// <summary>
     /// Read data
@@ -193,22 +193,22 @@ public:
     /// </summary>
     /// <param name="includeFree">If true - non-allocated regions will be included in list</param>
     /// <returns>Found regions</returns>
-    BLACKBONE_API std::vector<MEMORY_BASIC_INFORMATION64> EnumRegions( bool includeFree = false );
+    BRANDENBONE_API std::vector<MEMORY_BASIC_INFORMATION64> EnumRegions( bool includeFree = false );
 
     /// <summary>
     /// Get memory protection casting behavior 
     /// </summary>
     /// <returns>current behavior</returns>
-    BLACKBONE_API MemProtectionCasting protectionCasting() {  return _casting; }
+    BRANDENBONE_API MemProtectionCasting protectionCasting() {  return _casting; }
 
     /// <summary>
     /// Set memory protection casting behavior 
     /// </summary>
     /// <param name="flag">new behavior</param>
-    BLACKBONE_API void protectionCasting( MemProtectionCasting casting ) { _casting = casting; }
+    BRANDENBONE_API void protectionCasting( MemProtectionCasting casting ) { _casting = casting; }
 
-    BLACKBONE_API inline class ProcessCore& core() { return _core; }
-    BLACKBONE_API inline class Process* process()  { return _process; }
+    BRANDENBONE_API inline class ProcessCore& core() { return _core; }
+    BRANDENBONE_API inline class Process* process()  { return _process; }
 
 private:
     ProcessMemory( const ProcessMemory& ) = delete;

@@ -7,7 +7,7 @@
 #include <string>
 #include <memory>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 using ptr_t = uint64_t;     // Generic pointer in remote process

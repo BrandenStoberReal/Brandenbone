@@ -4,7 +4,7 @@
 #include "../Subsystem/NativeSubsystem.h"
 #include "../Misc/Trace.hpp"
 
-namespace blackbone
+namespace BrandenBone
 {
 /// <summary>
 /// MemBlock ctor
@@ -104,7 +104,7 @@ call_result_t<MemBlock> MemBlock::Allocate(
             return status;
     }
 #ifdef _DEBUG
-    BLACKBONE_TRACE(L"Allocate: Allocating at address 0x%p (0x%X bytes)", static_cast<uintptr_t>(desired64), size);
+    BrandenBone_TRACE(L"Allocate: Allocating at address 0x%p (0x%X bytes)", static_cast<uintptr_t>(desired64), size);
 #endif
     return MemBlock( &process, desired64, size, protection, own );
 }

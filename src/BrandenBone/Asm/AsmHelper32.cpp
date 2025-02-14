@@ -3,7 +3,7 @@
 #include <set>
 #include <assert.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 AsmHelper32::AsmHelper32( )

@@ -12,7 +12,7 @@
 
 
 
-namespace blackbone
+namespace BrandenBone
 {
 
 RemoteLocalHook::RemoteLocalHook( class Process& process )
@@ -206,7 +206,7 @@ NTSTATUS RemoteLocalHook::CopyOldCode( bool x64 )
 
             memcpy( &diff, src + ofst, sz );
 
-            // An attempted (partial) solution to https://github.com/DarthTon/Blackbone/issues/418
+            // An attempted (partial) solution to https://github.com/DarthTon/BrandenBone/issues/418
             // TODO: Do NOT adjust the offset if it points to WITHIN the code that's being moved!
 
             int64_t newDiff = ((int64_t) diff) + (((ptr_t) (_ctx.address+thunkSize))-newAddr);

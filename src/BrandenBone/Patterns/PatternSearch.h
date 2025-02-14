@@ -7,7 +7,7 @@
 #include <functional>
 #include <initializer_list>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 class PatternSearch
@@ -24,13 +24,13 @@ public:
 	// is always 8-byte-aligned, you can pass logAlignment=3 (2^3 = 8) to skip searching at all addresses that aren't multiples
 	// of 8. Note that for smaller alignments and depending on the exact pattern, this may not always be faster (it may even be
 	// a tiny bit slower), so profile it if you care about performance.
-    BLACKBONE_API PatternSearch( const std::vector<uint8_t>& pattern, size_t logAlignment = 0 );
-    BLACKBONE_API PatternSearch( const std::initializer_list<uint8_t>&& pattern, size_t logAlignment = 0 );
-    BLACKBONE_API PatternSearch( const std::string& pattern, size_t logAlignment = 0 );
-    BLACKBONE_API PatternSearch( const char* pattern, size_t len = 0, size_t logAlignment = 0 );
-    BLACKBONE_API PatternSearch( const uint8_t* pattern, size_t len = 0, size_t logAlignment = 0 );
+    BRANDENBONE_API PatternSearch( const std::vector<uint8_t>& pattern, size_t logAlignment = 0 );
+    BRANDENBONE_API PatternSearch( const std::initializer_list<uint8_t>&& pattern, size_t logAlignment = 0 );
+    BRANDENBONE_API PatternSearch( const std::string& pattern, size_t logAlignment = 0 );
+    BRANDENBONE_API PatternSearch( const char* pattern, size_t len = 0, size_t logAlignment = 0 );
+    BRANDENBONE_API PatternSearch( const uint8_t* pattern, size_t len = 0, size_t logAlignment = 0 );
 
-    BLACKBONE_API ~PatternSearch() = default;
+    BRANDENBONE_API ~PatternSearch() = default;
 
     /// <summary>
     /// Default pattern matching with wildcards and a callback handler for matches.
@@ -42,7 +42,7 @@ public:
     /// <param name="handler">Callback that is called for every match. If it returns true, the search is stopped prematurely.</param>
     /// <param name="value_offset">Value that will be added to resulting addresses</param>
     /// <returns>true if the callback handler ever returned true (i.e. the search ended prematurely), false otherwise.</returns>
-    BLACKBONE_API bool SearchWithHandler(
+    BRANDENBONE_API bool SearchWithHandler(
         uint8_t wildcard,
         void* scanStart,
         size_t scanSize,
@@ -59,7 +59,7 @@ public:
     /// <param name="handler">Callback that is called for every match. If it returns true, the search is stopped prematurely.</param>
     /// <param name="value_offset">Value that will be added to resulting addresses</param>
     /// <returns>true if the callback handler ever returned true (i.e. the search ended prematurely), false otherwise.</returns>
-    BLACKBONE_API bool SearchWithHandler(
+    BRANDENBONE_API bool SearchWithHandler(
         void* scanStart,
         size_t scanSize,
 		MatchHandler handler,
@@ -75,7 +75,7 @@ public:
     /// <param name="scanSize">Size of region to scan</param>
     /// <param name="handler">Callback that is called for every match. If it returns true, the search is stopped prematurely.</param>
     /// <returns>true if the callback handler ever returned true (i.e. the search ended prematurely), false otherwise.</returns>
-    BLACKBONE_API bool SearchRemoteWithHandler(
+    BRANDENBONE_API bool SearchRemoteWithHandler(
         class Process& remote,
         uint8_t wildcard,
         ptr_t scanStart,
@@ -91,7 +91,7 @@ public:
     /// <param name="scanSize">Size of region to scan</param>
     /// <param name="handler">Callback that is called for every match. If it returns true, the search is stopped prematurely.</param>
     /// <returns>true if the callback handler ever returned true (i.e. the search ended prematurely), false otherwise.</returns>
-    BLACKBONE_API bool SearchRemoteWithHandler(
+    BRANDENBONE_API bool SearchRemoteWithHandler(
         class Process& remote,
         ptr_t scanStart,
         size_t scanSize,
@@ -106,7 +106,7 @@ public:
     /// <param name="wildcard">Pattern wildcard</param>
     /// <param name="handler">Callback that is called for every match. If it returns true, the search is stopped prematurely.</param>
     /// <returns>true if the callback handler ever returned true (i.e. the search ended prematurely), false otherwise.</returns>
-    BLACKBONE_API bool SearchRemoteWholeWithHandler(
+    BRANDENBONE_API bool SearchRemoteWholeWithHandler(
         class Process& remote,
         bool useWildcard,
         uint8_t wildcard,
@@ -129,7 +129,7 @@ public:
     /// <param name="value_offset">Value that will be added to resulting addresses</param>
     /// <param name="maxMatches">Maximum number of matches to collect</param>
     /// <returns>Number of found addresses</returns>
-    BLACKBONE_API size_t Search( 
+    BRANDENBONE_API size_t Search( 
         uint8_t wildcard, 
         void* scanStart, 
         size_t scanSize, 
@@ -148,7 +148,7 @@ public:
     /// <param name="value_offset">Value that will be added to resulting addresses</param>
     /// <param name="maxMatches">Maximum number of matches to collect</param>
     /// <returns>Number of found addresses</returns>
-    BLACKBONE_API size_t Search( 
+    BRANDENBONE_API size_t Search( 
         void* scanStart, 
         size_t scanSize, 
         std::vector<ptr_t>& out, 
@@ -166,7 +166,7 @@ public:
     /// <param name="out">Found results</param>
     /// <param name="maxMatches">Maximum number of matches to collect</param>
     /// <returns>Number of found addresses</returns>
-    BLACKBONE_API size_t SearchRemote( 
+    BRANDENBONE_API size_t SearchRemote( 
         class Process& remote, 
         uint8_t wildcard, 
         ptr_t scanStart,
@@ -184,7 +184,7 @@ public:
     /// <param name="out">Found results</param>
     /// <param name="maxMatches">Maximum number of matches to collect</param>
     /// <returns>Number of found addresses</returns>
-    BLACKBONE_API size_t SearchRemote( 
+    BRANDENBONE_API size_t SearchRemote( 
         class Process& remote, 
         ptr_t scanStart, 
         size_t scanSize, 
@@ -201,7 +201,7 @@ public:
     /// <param name="out">Found results</param>
     /// <param name="maxMatches">Maximum number of matches to collect</param>
     /// <returns>Number of found addresses</returns>
-    BLACKBONE_API size_t SearchRemoteWhole( 
+    BRANDENBONE_API size_t SearchRemoteWhole( 
         class Process& remote, 
         bool useWildcard, 
         uint8_t wildcard, 

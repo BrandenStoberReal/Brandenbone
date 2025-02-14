@@ -1,7 +1,7 @@
 #pragma once
 #include "../include/Types.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace blackbone
+namespace BrandenBone
 {
 
 template<typename R, typename... Args, class C>

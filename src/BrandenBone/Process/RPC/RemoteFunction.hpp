@@ -9,7 +9,7 @@
 // TODO: Find more elegant way to deduce calling convention
 //       than defining each one manually
 
-namespace blackbone
+namespace BrandenBone
 {
 template<eCalligConvention Conv, typename R, typename... Args>
 class RemoteFunctionBase

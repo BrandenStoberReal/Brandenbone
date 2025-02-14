@@ -2,7 +2,7 @@
 
 #include "Winheaders.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 #pragma warning(push)

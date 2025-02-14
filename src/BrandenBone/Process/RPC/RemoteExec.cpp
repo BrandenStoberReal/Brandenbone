@@ -8,7 +8,7 @@
 #include <AccCtrl.h>
 #include <Aclapi.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 RemoteExec::RemoteExec( Process& proc )
@@ -50,11 +50,11 @@ NTSTATUS RemoteExec::ExecInNewThread(
     bool switchMode = false;
     switch (modeSwitch)
     {
-    case blackbone::ForceSwitch:
+    case BrandenBone::ForceSwitch:
         switchMode = true;
         break;
 
-    case blackbone::AutoSwitch:
+    case BrandenBone::AutoSwitch:
         switchMode = _process.barrier().type == wow_32_64;
         break;
     }

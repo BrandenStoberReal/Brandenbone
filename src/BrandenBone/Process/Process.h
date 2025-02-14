@@ -17,7 +17,7 @@
 #include <string>
 #include <list>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>
@@ -83,8 +83,8 @@ struct HandleInfo
 class Process
 {
 public:
-    BLACKBONE_API Process();
-    BLACKBONE_API ~Process(void);
+    BRANDENBONE_API Process();
+    BRANDENBONE_API ~Process(void);
 
     /// <summary>
     /// Attach to existing process
@@ -92,7 +92,7 @@ public:
     /// <param name="pid">Process ID</param>
     /// <param name="access">Access mask</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Attach( DWORD pid, DWORD access = DEFAULT_ACCESS_P );
+    BRANDENBONE_API NTSTATUS Attach( DWORD pid, DWORD access = DEFAULT_ACCESS_P );
 
     /// <summary>
     /// Attach to existing process
@@ -100,14 +100,14 @@ public:
     /// <param name="name">Process name</param>
     /// <param name="access">Access mask</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Attach( const wchar_t* name, DWORD access = DEFAULT_ACCESS_P );
+    BRANDENBONE_API NTSTATUS Attach( const wchar_t* name, DWORD access = DEFAULT_ACCESS_P );
 
     /// <summary>
     /// Attach to existing process
     /// </summary>
     /// <param name="pid">Process handle</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Attach( HANDLE hProc );
+    BRANDENBONE_API NTSTATUS Attach( HANDLE hProc );
 
     /// <summary>
     /// Create new process and attach to it
@@ -119,7 +119,7 @@ public:
     /// <param name="currentDir">Startup directory</param>
     /// <param name="pStartup">Additional startup params</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS CreateAndAttach(
+    BRANDENBONE_API NTSTATUS CreateAndAttach(
         const std::wstring& path,
         bool suspended = false,
         bool forceInit = true,
@@ -132,57 +132,57 @@ public:
     /// Detach form current process, if any
     /// </summary>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Detach();
+    BRANDENBONE_API NTSTATUS Detach();
 
     /// <summary>
     /// Ensure LdrInitializeProcess gets called
     /// </summary>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS EnsureInit();
+    BRANDENBONE_API NTSTATUS EnsureInit();
 
     /// <summary>
     /// Suspend process
     /// </summary>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Suspend();
+    BRANDENBONE_API NTSTATUS Suspend();
 
     /// <summary>
     /// Resume process
     /// </summary>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Resume();
+    BRANDENBONE_API NTSTATUS Resume();
 
     /// <summary>
     /// Get process ID
     /// </summary>
     /// <returns>Process ID</returns>
-    BLACKBONE_API inline DWORD pid() const { return _core.pid(); }
+    BRANDENBONE_API inline DWORD pid() const { return _core.pid(); }
 
     /// <summary>
     /// Checks if process still exists
     /// </summary>
     /// <returns>true if process is valid and exists</returns>
-    BLACKBONE_API bool valid();
+    BRANDENBONE_API bool valid();
 
     /// <summary>
     /// Terminate process
     /// </summary>
     /// <param name="code">Exit code</param>
     /// <returns>Stratus code</returns>
-    BLACKBONE_API NTSTATUS Terminate( uint32_t code = 0 );
+    BRANDENBONE_API NTSTATUS Terminate( uint32_t code = 0 );
 
     /// <summary>
     /// Enumerate all open handles
     /// </summary>
     /// <returns>Found handles or status code</returns>
-    BLACKBONE_API call_result_t<std::vector<HandleInfo>> EnumHandles();
+    BRANDENBONE_API call_result_t<std::vector<HandleInfo>> EnumHandles();
 
     /// <summary>
     /// Search for process by executable name
     /// </summary>
     /// <param name="name">Process name. If empty - function will retrieve all existing processes</param>
     /// <param name="found">Found processses</param>
-    BLACKBONE_API static std::vector<DWORD> EnumByName( const std::wstring& name );
+    BRANDENBONE_API static std::vector<DWORD> EnumByName( const std::wstring& name );
 
     /// <summary>
     /// Search for process by executable name or by process ID
@@ -192,7 +192,7 @@ public:
     /// <param name="found">Found processses</param>
     /// <param name="includeThreads">If set to true, function will retrieve info ablout process threads</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API static call_result_t<std::vector<ProcessInfo>> EnumByNameOrPID(
+    BRANDENBONE_API static call_result_t<std::vector<ProcessInfo>> EnumByNameOrPID(
         uint32_t pid,
         const std::wstring& name, 
         bool includeThreads = false
@@ -201,18 +201,18 @@ public:
     //
     // Subroutines
     //
-    BLACKBONE_API ProcessCore&     core()       { return _core;       }  // Core routines and native 
-    BLACKBONE_API ProcessMemory&   memory()     { return _memory;     }  // Memory manipulations
-    BLACKBONE_API ProcessModules&  modules()    { return _modules;    }  // Module management
-    BLACKBONE_API ProcessThreads&  threads()    { return _threads;    }  // Threads
-    BLACKBONE_API RemoteHook&      hooks()      { return _hooks;      }  // Hooking code remotely
-    BLACKBONE_API RemoteLocalHook& localHooks() { return _localHooks; }  // Hooking code locally
-    BLACKBONE_API RemoteExec&      remote()     { return _remote;     }  // Remote code execution
-    BLACKBONE_API MMap&            mmap()       { return _mmap;       }  // Manual module mapping
-    BLACKBONE_API NtLdr&           nativeLdr()  { return _nativeLdr;  }  // Native loader routines
+    BRANDENBONE_API ProcessCore&     core()       { return _core;       }  // Core routines and native 
+    BRANDENBONE_API ProcessMemory&   memory()     { return _memory;     }  // Memory manipulations
+    BRANDENBONE_API ProcessModules&  modules()    { return _modules;    }  // Module management
+    BRANDENBONE_API ProcessThreads&  threads()    { return _threads;    }  // Threads
+    BRANDENBONE_API RemoteHook&      hooks()      { return _hooks;      }  // Hooking code remotely
+    BRANDENBONE_API RemoteLocalHook& localHooks() { return _localHooks; }  // Hooking code locally
+    BRANDENBONE_API RemoteExec&      remote()     { return _remote;     }  // Remote code execution
+    BRANDENBONE_API MMap&            mmap()       { return _mmap;       }  // Manual module mapping
+    BRANDENBONE_API NtLdr&           nativeLdr()  { return _nativeLdr;  }  // Native loader routines
 
     // Sugar
-    BLACKBONE_API const Wow64Barrier& barrier() const { return _core._native->GetWow64Barrier(); }
+    BRANDENBONE_API const Wow64Barrier& barrier() const { return _core._native->GetWow64Barrier(); }
 
 private:
     Process(const Process&) = delete;

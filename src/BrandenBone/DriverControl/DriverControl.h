@@ -4,7 +4,7 @@
 #include "../Include/Types.h"
 #include "../Include/Macro.h"
 #include "../Include/HandleGuard.h"
-#include "../../BlackBoneDrv/BlackBoneDef.h"
+#include "../../BrandenBoneDrv/BrandenBoneDef.h"
 
 #include <string>
 #include <map>
@@ -12,7 +12,7 @@
 
 ENUM_OPS( KMmapFlags );
 
-namespace blackbone
+namespace BrandenBone
 {
 // [Original ptr, size] <--> [Mapped ptr]
 using mapMemoryMap = std::map<std::pair<ptr_t, uint32_t>, ptr_t>;
@@ -39,30 +39,30 @@ struct MapMemoryRegionResult
 class DriverControl
 {
 public:
-    BLACKBONE_API DriverControl();
-    BLACKBONE_API ~DriverControl();
+    BRANDENBONE_API DriverControl();
+    BRANDENBONE_API ~DriverControl();
 
-    BLACKBONE_API static DriverControl& Instance();
+    BRANDENBONE_API static DriverControl& Instance();
 
     /// <summary>
     /// Try to load driver if it isn't loaded
     /// </summary>
     /// <param name="path">Path to the driver file</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS EnsureLoaded( const std::wstring& path = L"" );
+    BRANDENBONE_API NTSTATUS EnsureLoaded( const std::wstring& path = L"" );
 
     /// <summary>
     /// Reload driver
     /// </summary>
     /// <param name="path">Path to the driver file</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Reload( std::wstring path = L"" );
+    BRANDENBONE_API NTSTATUS Reload( std::wstring path = L"" );
 
     /// <summary>
     /// Unload driver
     /// </summary>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS Unload();
+    BRANDENBONE_API NTSTATUS Unload();
 
     /// <summary>
     /// Disable DEP for process
@@ -70,7 +70,7 @@ public:
     /// </summary>
     /// <param name="pid">Target PID</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS DisableDEP( DWORD pid );
+    BRANDENBONE_API NTSTATUS DisableDEP( DWORD pid );
 
     /// <summary>
     /// Change process protection flag
@@ -80,7 +80,7 @@ public:
     /// <param name="dynamicCode">Prohibit dynamic code</param>
     /// <param name="binarySignature">Prohibit loading non-microsoft dlls</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS ProtectProcess( 
+    BRANDENBONE_API NTSTATUS ProtectProcess( 
         DWORD pid, 
         PolicyOpt protection, 
         PolicyOpt dynamicCode = Policy_Keep,
@@ -94,7 +94,7 @@ public:
     /// <param name="handle">Handle</param>
     /// <param name="access">New access</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS PromoteHandle( DWORD pid, HANDLE handle, DWORD access );
+    BRANDENBONE_API NTSTATUS PromoteHandle( DWORD pid, HANDLE handle, DWORD access );
 
     /// <summary>
     /// Allocate virtual memory
@@ -105,7 +105,7 @@ public:
     /// <param name="type">Allocation type - MEM_RESERVE/MEM_COMMIT</param>
     /// <param name="protection">Memory protection</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS AllocateMem( DWORD pid, ptr_t& base, ptr_t& size, DWORD type, DWORD protection, bool physical = false );
+    BRANDENBONE_API NTSTATUS AllocateMem( DWORD pid, ptr_t& base, ptr_t& size, DWORD type, DWORD protection, bool physical = false );
 
     /// <summary>
     /// Free virtual memory
@@ -115,7 +115,7 @@ public:
     /// <param name="size">Region size</param>
     /// <param name="type">Free type - MEM_RELEASE/MEM_DECOMMIT</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS FreeMem( DWORD pid, ptr_t base, ptr_t size, DWORD type );
+    BRANDENBONE_API NTSTATUS FreeMem( DWORD pid, ptr_t base, ptr_t size, DWORD type );
 
     /// <summary>
     /// Read process memory
@@ -125,7 +125,7 @@ public:
     /// <param name="size">Data size</param>
     /// <param name="buffer">Buffer address</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS ReadMem( DWORD pid, ptr_t base, ptr_t size, PVOID buffer );
+    BRANDENBONE_API NTSTATUS ReadMem( DWORD pid, ptr_t base, ptr_t size, PVOID buffer );
 
     /// <summary>
     /// Write process memory
@@ -135,7 +135,7 @@ public:
     /// <param name="size">Data size</param>
     /// <param name="buffer">Buffer address</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS WriteMem( DWORD pid, ptr_t base, ptr_t size, PVOID buffer );
+    BRANDENBONE_API NTSTATUS WriteMem( DWORD pid, ptr_t base, ptr_t size, PVOID buffer );
 
     /// <summary>
     /// Change memory protection
@@ -145,7 +145,7 @@ public:
     /// <param name="size">Region size</param>
     /// <param name="protection">New protection</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS ProtectMem( DWORD pid, ptr_t base, ptr_t size, DWORD protection );
+    BRANDENBONE_API NTSTATUS ProtectMem( DWORD pid, ptr_t base, ptr_t size, DWORD protection );
 
     /// <summary>
     /// Maps target process memory into current process
@@ -155,7 +155,7 @@ public:
     /// <param name="mapSections">The map sections.</param>
     /// <param name="result">Results</param>
     /// <returns>Status code </returns>
-    BLACKBONE_API NTSTATUS MapMemory( DWORD pid, const std::wstring& pipeName, bool mapSections, MapMemoryResult& result );
+    BRANDENBONE_API NTSTATUS MapMemory( DWORD pid, const std::wstring& pipeName, bool mapSections, MapMemoryResult& result );
 
     /// <summary>
     /// Maps single memory region into current process
@@ -165,14 +165,14 @@ public:
     /// <param name="size">Region size</param>
     /// <param name="result">Mapped region info</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS MapMemoryRegion( DWORD pid, ptr_t base, uint32_t size, MapMemoryRegionResult& result );
+    BRANDENBONE_API NTSTATUS MapMemoryRegion( DWORD pid, ptr_t base, uint32_t size, MapMemoryRegionResult& result );
 
     /// <summary>
     /// Unmap memory of the target process from current
     /// </summary>
     /// <param name="pid">Target PID</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS UnmapMemory( DWORD pid );
+    BRANDENBONE_API NTSTATUS UnmapMemory( DWORD pid );
 
     /// <summary>
     /// Unmap single memory region
@@ -184,7 +184,7 @@ public:
     /// <param name="size">Region size</param>
     /// <param name="result">Unampped region info</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS UnmapMemoryRegion( DWORD pid, ptr_t base, uint32_t size );
+    BRANDENBONE_API NTSTATUS UnmapMemoryRegion( DWORD pid, ptr_t base, uint32_t size );
 
     /// <summary>
     /// Inject DLL into arbitrary process
@@ -198,7 +198,7 @@ public:
     /// <param name="erasePE">Erase PE headers after injection</param>
     /// <param name="wait">Wait for injection</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS InjectDll(
+    BRANDENBONE_API NTSTATUS InjectDll(
         DWORD pid, 
         const std::wstring& path, 
         InjectType itype, 
@@ -218,7 +218,7 @@ public:
     /// <param name="initRVA">Init routine RVA</param>
     /// <param name="initArg">Init routine argument</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS MmapDll(
+    BRANDENBONE_API NTSTATUS MmapDll(
         DWORD pid,
         const std::wstring& path,
         KMmapFlags flags,
@@ -237,7 +237,7 @@ public:
     /// <param name="initRVA">Init routine RVA</param>
     /// <param name="initArg">Init routine argument</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS MmapDll(
+    BRANDENBONE_API NTSTATUS MmapDll(
         DWORD pid,
         void* address,
         uint32_t size,
@@ -252,7 +252,7 @@ public:
     /// </summary>
     /// <param name="path">Fully quialified path to the drver</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS MMapDriver( const std::wstring& path );
+    BRANDENBONE_API NTSTATUS MMapDriver( const std::wstring& path );
 
     /// <summary>
     /// Make VAD region appear as PAGE_NO_ACESS to NtQueryVirtualMemory
@@ -261,14 +261,14 @@ public:
     /// <param name="base">Region base</param>
     /// <param name="size">Region size</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS ConcealVAD( DWORD pid, ptr_t base, uint32_t size );
+    BRANDENBONE_API NTSTATUS ConcealVAD( DWORD pid, ptr_t base, uint32_t size );
 
     /// <summary>
     /// Unlink process handle table from HandleListHead
     /// </summary>
     /// <param name="pid">Target process ID</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS UnlinkHandleTable( DWORD pid );
+    BRANDENBONE_API NTSTATUS UnlinkHandleTable( DWORD pid );
 
     /// <summary>
     ///  Enumerate committed, accessible, non-guarded memory regions
@@ -276,14 +276,14 @@ public:
     /// <param name="pid">Target process ID</param>
     /// <param name="regions">Found regions</param>
     /// <returns>Status code</returns>
-    BLACKBONE_API NTSTATUS EnumMemoryRegions( DWORD pid, std::vector<MEMORY_BASIC_INFORMATION64>& regions );
+    BRANDENBONE_API NTSTATUS EnumMemoryRegions( DWORD pid, std::vector<MEMORY_BASIC_INFORMATION64>& regions );
 
     /// <summary>
     /// Check if driver is loaded
     /// </summary>
     /// <returns></returns>
-    BLACKBONE_API inline bool loaded() const { return _hDriver.valid(); }
-    BLACKBONE_API inline NTSTATUS status() const { return _loadStatus; }
+    BRANDENBONE_API inline bool loaded() const { return _hDriver.valid(); }
+    BRANDENBONE_API inline NTSTATUS status() const { return _loadStatus; }
 
 private:
     DriverControl( const DriverControl& ) = delete;

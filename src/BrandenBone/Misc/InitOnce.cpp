@@ -11,7 +11,7 @@
 #include <string>
 #include <cassert>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 class InitOnce

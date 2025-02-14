@@ -2,7 +2,7 @@
 #include "../Process.h"
 #include "../../Misc/Trace.hpp"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 RemoteMemory::RemoteMemory( Process* process )
@@ -126,7 +126,7 @@ NTSTATUS RemoteMemory::Unmap( ptr_t base, uint32_t size )
 /// <param name="address">Address to translate</param>
 /// <param name="resolveFault">If set to true, routine will try to map non-existing region upon translation failure</param>
 /// <returns>Translated address</returns>
-blackbone::ptr_t RemoteMemory::TranslateAddress( ptr_t address, bool resolveFault /*= true */ )
+BrandenBone::ptr_t RemoteMemory::TranslateAddress( ptr_t address, bool resolveFault /*= true */ )
 {
     auto searchFn = [&address]( const decltype(_mapDatabase)::value_type& val )
     {
@@ -307,12 +307,12 @@ void RemoteMemory::HookThread()
         // Update mapping
         if (opData.allocType == MemVirtualAlloc || opData.allocType == MemMapSection)
         {
-            BLACKBONE_TRACE( L"Allocated 0x%x bytes at %p", opData.allocSize, opData.allocAddress );
+            BrandenBone_TRACE( L"Allocated 0x%x bytes at %p", opData.allocSize, opData.allocAddress );
             Map( opData.allocAddress, opData.allocSize );
         }
         else
         {
-            BLACKBONE_TRACE( L"Freed 0x%x bytes at %p", opData.allocSize, opData.allocAddress );
+            BrandenBone_TRACE( L"Freed 0x%x bytes at %p", opData.allocSize, opData.allocAddress );
             Unmap( opData.allocAddress, opData.allocSize );
         }
     }

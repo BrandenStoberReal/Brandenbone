@@ -4,7 +4,7 @@
 #include <optional>
 #include <cassert>
 
-namespace blackbone
+namespace BrandenBone
 {
 /// <summary>
 /// Function result or failure status
@@ -48,7 +48,7 @@ struct call_result_t
 #include <memory>
 #include <cassert>
 
-namespace blackbone
+namespace BrandenBone
 {
     /// <summary>
     /// Function result or failure status

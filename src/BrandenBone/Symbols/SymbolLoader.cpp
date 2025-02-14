@@ -3,7 +3,7 @@
 #include "../Symbols/PatternLoader.h"
 #include "../PE/PEImage.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 SymbolLoader::SymbolLoader() 

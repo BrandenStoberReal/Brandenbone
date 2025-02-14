@@ -1,5 +1,5 @@
 #pragma once
-namespace blackbone
+namespace BrandenBone
 {
 
 enum MEMORY_INFORMATION_CLASS

@@ -2,7 +2,7 @@
 
 #include "Winheaders.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 template<typename T>
 struct _LDR_DATA_TABLE_ENTRY_W7 : _LDR_DATA_TABLE_ENTRY_BASE_T<T>

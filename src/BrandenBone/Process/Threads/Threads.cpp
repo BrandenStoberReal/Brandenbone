@@ -6,7 +6,7 @@
 #include <random>
 #include <algorithm>
 
-namespace blackbone
+namespace BrandenBone
 {
     
 ProcessThreads::ProcessThreads( ProcessCore& core )

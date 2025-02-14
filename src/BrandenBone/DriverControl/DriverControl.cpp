@@ -5,10 +5,10 @@
 
 #include <3rd_party/VersionApi.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
-#define DRIVER_SVC_NAME L"BlackBone"
+#define DRIVER_SVC_NAME L"BrandenBone"
 
 DriverControl::DriverControl()
 {
@@ -38,7 +38,7 @@ NTSTATUS DriverControl::EnsureLoaded( const std::wstring& path /*= L"" */ )
 
     // Try to open handle to existing driver
     _hDriver = CreateFileW( 
-        BLACKBONE_DEVICE_FILE, 
+        BrandenBone_DEVICE_FILE, 
         GENERIC_READ | GENERIC_WRITE, 
         FILE_SHARE_READ | FILE_SHARE_WRITE,
         NULL, OPEN_EXISTING, 0, NULL
@@ -66,15 +66,15 @@ NTSTATUS DriverControl::Reload( std::wstring path /*= L"" */ )
         const wchar_t* filename = nullptr;
 
         if (IsWindows10OrGreater())
-            filename = BLACKBONE_FILE_NAME_10;
+            filename = BrandenBone_FILE_NAME_10;
         else if (IsWindows8Point1OrGreater())
-            filename = BLACKBONE_FILE_NAME_81;
+            filename = BrandenBone_FILE_NAME_81;
         else if (IsWindows8OrGreater())
-            filename = BLACKBONE_FILE_NAME_8;
+            filename = BrandenBone_FILE_NAME_8;
         else if (IsWindows7OrGreater())
-            filename = BLACKBONE_FILE_NAME_7;
+            filename = BrandenBone_FILE_NAME_7;
         else
-            filename = BLACKBONE_FILE_NAME;
+            filename = BrandenBone_FILE_NAME;
 
         path = Utils::GetExeDirectory() + L"\\" + filename;
     }
@@ -82,12 +82,12 @@ NTSTATUS DriverControl::Reload( std::wstring path /*= L"" */ )
     _loadStatus = LoadDriver( DRIVER_SVC_NAME, path );
     if (!NT_SUCCESS( _loadStatus ))
     {
-        BLACKBONE_TRACE( L"Failed to load driver %ls. Status 0x%X", path.c_str(), _loadStatus );
+        BrandenBone_TRACE( L"Failed to load driver %ls. Status 0x%X", path.c_str(), _loadStatus );
         return _loadStatus;
     }
 
     _hDriver = CreateFileW( 
-        BLACKBONE_DEVICE_FILE, 
+        BrandenBone_DEVICE_FILE, 
         GENERIC_READ | GENERIC_WRITE, 
         FILE_SHARE_READ | FILE_SHARE_WRITE,
         NULL, OPEN_EXISTING, 0, NULL
@@ -96,7 +96,7 @@ NTSTATUS DriverControl::Reload( std::wstring path /*= L"" */ )
     if (_hDriver == INVALID_HANDLE_VALUE)
     {
         _loadStatus = LastNtStatus();
-        BLACKBONE_TRACE( L"Failed to open driver handle. Status 0x%X", _loadStatus );
+        BrandenBone_TRACE( L"Failed to open driver handle. Status 0x%X", _loadStatus );
         return _loadStatus;
     }
 
@@ -136,12 +136,12 @@ NTSTATUS DriverControl::MapMemory( DWORD pid, const std::wstring& pipeName, bool
 
     wcscpy_s( data.pipeName, pipeName.c_str() );
 
-    BOOL res = DeviceIoControl( _hDriver, IOCTL_BLACKBONE_MAP_MEMORY, &data, sizeof( data ), &sizeRequired, sizeof( sizeRequired ), &bytes, NULL );
+    BOOL res = DeviceIoControl( _hDriver, IOCTL_BrandenBone_MAP_MEMORY, &data, sizeof( data ), &sizeRequired, sizeof( sizeRequired ), &bytes, NULL );
     if (res != FALSE && bytes == 4)
     {
         MAP_MEMORY_RESULT* pResult = (MAP_MEMORY_RESULT*)malloc( sizeRequired );
 
-        if (DeviceIoControl( _hDriver, IOCTL_BLACKBONE_MAP_MEMORY, &data, sizeof( data ), pResult, sizeRequired, &bytes, NULL ))
+        if (DeviceIoControl( _hDriver, IOCTL_BrandenBone_MAP_MEMORY, &data, sizeof( data ), pResult, sizeRequired, &bytes, NULL ))
         {
             for (ULONG i = 0; i < pResult->count; i++)
                 result.regions.emplace( std::make_pair( std::make_pair( pResult->entries[i].originalPtr, pResult->entries[i].size ),
@@ -181,7 +181,7 @@ NTSTATUS DriverControl::MapMemoryRegion( DWORD pid, ptr_t base, uint32_t size, M
     data.base = base;
     data.size = size;
 
-    if (DeviceIoControl( _hDriver, IOCTL_BLACKBONE_MAP_REGION, &data, sizeof( data ), &mapResult, sizeof( mapResult ), &bytes, NULL ))
+    if (DeviceIoControl( _hDriver, IOCTL_BrandenBone_MAP_REGION, &data, sizeof( data ), &mapResult, sizeof( mapResult ), &bytes, NULL ))
     {
         result.newPtr = mapResult.newPtr;
         result.originalPtr = mapResult.originalPtr;
@@ -209,7 +209,7 @@ NTSTATUS DriverControl::UnmapMemory( DWORD pid )
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (DeviceIoControl( _hDriver, IOCTL_BLACKBONE_UNMAP_MEMORY, &data, sizeof( data ), NULL, 0, &bytes, NULL ))
+    if (DeviceIoControl( _hDriver, IOCTL_BrandenBone_UNMAP_MEMORY, &data, sizeof( data ), NULL, 0, &bytes, NULL ))
         return STATUS_SUCCESS;
 
     return LastNtStatus();
@@ -238,7 +238,7 @@ NTSTATUS DriverControl::UnmapMemoryRegion( DWORD pid, ptr_t base, uint32_t size 
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_UNMAP_REGION, &data, sizeof( data ), NULL, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_UNMAP_REGION, &data, sizeof( data ), NULL, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -260,7 +260,7 @@ NTSTATUS DriverControl::DisableDEP( DWORD pid )
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_DISABLE_DEP, &disableDep, sizeof( disableDep ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_DISABLE_DEP, &disableDep, sizeof( disableDep ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -288,7 +288,7 @@ NTSTATUS DriverControl::ProtectProcess(
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_SET_PROTECTION, &setProt, sizeof( setProt ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_SET_PROTECTION, &setProt, sizeof( setProt ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -314,7 +314,7 @@ NTSTATUS DriverControl::PromoteHandle( DWORD pid, HANDLE handle, DWORD access )
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_GRANT_ACCESS, &grantAccess, sizeof( grantAccess ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_GRANT_ACCESS, &grantAccess, sizeof( grantAccess ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -348,7 +348,7 @@ NTSTATUS DriverControl::AllocateMem( DWORD pid, ptr_t& base, ptr_t& size, DWORD 
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
     if (!DeviceIoControl( 
-        _hDriver, IOCTL_BLACKBONE_ALLOCATE_FREE_MEMORY, 
+        _hDriver, IOCTL_BrandenBone_ALLOCATE_FREE_MEMORY, 
         &allocMem, sizeof( allocMem ), 
         &result, sizeof( result ), &bytes, NULL 
         ))
@@ -389,7 +389,7 @@ NTSTATUS DriverControl::FreeMem( DWORD pid, ptr_t base, ptr_t size, DWORD type )
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
     if (!DeviceIoControl(
-        _hDriver, IOCTL_BLACKBONE_ALLOCATE_FREE_MEMORY,
+        _hDriver, IOCTL_BrandenBone_ALLOCATE_FREE_MEMORY,
         &freeMem, sizeof( freeMem ),
         &result, sizeof( result ), &bytes, NULL
         ))
@@ -423,7 +423,7 @@ NTSTATUS DriverControl::ReadMem( DWORD pid, ptr_t base, ptr_t size, PVOID buffer
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_COPY_MEMORY, &copyMem, sizeof( copyMem ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_COPY_MEMORY, &copyMem, sizeof( copyMem ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -452,7 +452,7 @@ NTSTATUS DriverControl::WriteMem( DWORD pid, ptr_t base, ptr_t size, PVOID buffe
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_COPY_MEMORY, &copyMem, sizeof( copyMem ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_COPY_MEMORY, &copyMem, sizeof( copyMem ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -480,7 +480,7 @@ NTSTATUS DriverControl::ProtectMem( DWORD pid, ptr_t base, ptr_t size, DWORD pro
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_PROTECT_MEMORY, &protectMem, sizeof( protectMem ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_PROTECT_MEMORY, &protectMem, sizeof( protectMem ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -525,7 +525,7 @@ NTSTATUS DriverControl::InjectDll(
     data.unlink = unlink;
     data.erasePE = erasePE;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_INJECT_DLL, &data, sizeof( data ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_INJECT_DLL, &data, sizeof( data ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -569,7 +569,7 @@ NTSTATUS DriverControl::MmapDll(
     data.imageSize = 0;
     data.asImage = false;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_INJECT_DLL, &data, sizeof( data ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_INJECT_DLL, &data, sizeof( data ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -612,7 +612,7 @@ NTSTATUS DriverControl::MmapDll(
     data.imageSize = size;
     data.asImage = asImage;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_INJECT_DLL, &data, sizeof( data ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_INJECT_DLL, &data, sizeof( data ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -639,7 +639,7 @@ NTSTATUS DriverControl::MMapDriver( const std::wstring& path )
     wcscpy_s( data.FullPath, ustr.Buffer );
     SAFE_CALL( RtlFreeUnicodeString, &ustr);
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_MAP_DRIVER, &data, sizeof( data ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_MAP_DRIVER, &data, sizeof( data ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -666,7 +666,7 @@ NTSTATUS DriverControl::ConcealVAD( DWORD pid, ptr_t base, uint32_t size )
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_HIDE_VAD, &hideVAD, sizeof( hideVAD ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_HIDE_VAD, &hideVAD, sizeof( hideVAD ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -686,7 +686,7 @@ NTSTATUS DriverControl::UnlinkHandleTable( DWORD pid )
     if (_hDriver == INVALID_HANDLE_VALUE)
         return STATUS_DEVICE_DOES_NOT_EXIST;
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_UNLINK_HTABLE, &unlink, sizeof( unlink ), nullptr, 0, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_UNLINK_HTABLE, &unlink, sizeof( unlink ), nullptr, 0, &bytes, NULL ))
         return LastNtStatus();
 
     return STATUS_SUCCESS;
@@ -714,13 +714,13 @@ NTSTATUS DriverControl::EnumMemoryRegions( DWORD pid, std::vector<MEMORY_BASIC_I
     data.pid = pid;
     result->count = 0;
 
-    DeviceIoControl( _hDriver, IOCTL_BLACKBONE_ENUM_REGIONS, &data, sizeof( data ), result, size, &bytes, NULL );
+    DeviceIoControl( _hDriver, IOCTL_BrandenBone_ENUM_REGIONS, &data, sizeof( data ), result, size, &bytes, NULL );
 
     result->count += 100;
     size = static_cast<DWORD>(result->count * sizeof( result->regions[0] ) + sizeof( result->count ));
     result = reinterpret_cast<PENUM_REGIONS_RESULT>(realloc( result, size ));
 
-    if (!DeviceIoControl( _hDriver, IOCTL_BLACKBONE_ENUM_REGIONS, &data, sizeof( data ), result, size, &bytes, NULL ))
+    if (!DeviceIoControl( _hDriver, IOCTL_BrandenBone_ENUM_REGIONS, &data, sizeof( data ), result, size, &bytes, NULL ))
     {
         free( result );
         return LastNtStatus();

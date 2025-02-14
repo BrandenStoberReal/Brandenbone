@@ -1,24 +1,24 @@
 #pragma once
-#include <BlackBone/Config.h>
-#include <BlackBone/Process/Process.h>
-#include <BlackBone/Process/MultPtr.hpp>
-#include <BlackBone/Process/RPC/RemoteFunction.hpp>
-#include <BlackBone/PE/PEImage.h>
-#include <BlackBone/Misc/Utils.h>
-#include <BlackBone/Misc/DynImport.h>
-#include <BlackBone/Syscalls/Syscall.h>
-#include <BlackBone/Patterns/PatternSearch.h>
-#include <BlackBone/Asm/LDasm.h>
-#include <BlackBone/localHook/VTableHook.hpp>
-#include <BlackBone/Symbols/SymbolLoader.h>
+#include <BrandenBone/Config.h>
+#include <BrandenBone/Process/Process.h>
+#include <BrandenBone/Process/MultPtr.hpp>
+#include <BrandenBone/Process/RPC/RemoteFunction.hpp>
+#include <BrandenBone/PE/PEImage.h>
+#include <BrandenBone/Misc/Utils.h>
+#include <BrandenBone/Misc/DynImport.h>
+#include <BrandenBone/Syscalls/Syscall.h>
+#include <BrandenBone/Patterns/PatternSearch.h>
+#include <BrandenBone/Asm/LDasm.h>
+#include <BrandenBone/localHook/VTableHook.hpp>
+#include <BrandenBone/Symbols/SymbolLoader.h>
 
 #include <iostream>
 #include <CppUnitTest.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-using namespace blackbone;
+using namespace BrandenBone;
 
-constexpr wchar_t ModuleName[] = L"BlackBoneTest.dll";
+constexpr wchar_t ModuleName[] = L"BrandenBoneTest.dll";
 
 /// <summary>
 /// Some extensions for Assert

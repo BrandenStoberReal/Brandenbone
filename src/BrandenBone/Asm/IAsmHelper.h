@@ -7,7 +7,7 @@
 #include <initializer_list>
 #include <vector>
 
-namespace blackbone
+namespace BrandenBone
 {
     //
     // Function calling convention
@@ -48,7 +48,7 @@ namespace blackbone
     class IAsmHelper
     {
     public:
-        BLACKBONE_API IAsmHelper( uint32_t arch = asmjit::kArchHost ) 
+        BRANDENBONE_API IAsmHelper( uint32_t arch = asmjit::kArchHost ) 
             : _assembler( &_runtime, arch ) { }
 
         virtual ~IAsmHelper() { }
@@ -63,7 +63,7 @@ namespace blackbone
         /// <summary>
         /// Switch processor into WOW64 emulation mode
         /// </summary>
-        BLACKBONE_API void SwitchTo86()
+        BRANDENBONE_API void SwitchTo86()
         {
             asmjit::Label l = _assembler.newLabel();
 
@@ -76,7 +76,7 @@ namespace blackbone
         /// <summary>
         /// Switch processor into x64 mode (long mode)
         /// </summary>
-        BLACKBONE_API void SwitchTo64()
+        BRANDENBONE_API void SwitchTo64()
         {
             asmjit::Label l = _assembler.newLabel();
 
@@ -87,8 +87,8 @@ namespace blackbone
             _assembler.db( 0xCB );    // retf
         }
 
-        BLACKBONE_API inline asmjit::X86Assembler* assembler() { return &_assembler; }
-        BLACKBONE_API inline asmjit::X86Assembler* operator ->() { return &_assembler; }
+        BRANDENBONE_API inline asmjit::X86Assembler* assembler() { return &_assembler; }
+        BRANDENBONE_API inline asmjit::X86Assembler* operator ->() { return &_assembler; }
 
     private:
         IAsmHelper( const IAsmHelper& ) = delete;

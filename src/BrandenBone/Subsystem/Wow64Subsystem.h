@@ -2,14 +2,14 @@
 
 #include "NativeSubsystem.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 class NativeWow64 : public Native
 {
 public:
-    BLACKBONE_API NativeWow64( HANDLE hProcess );
-    BLACKBONE_API ~NativeWow64();
+    BRANDENBONE_API NativeWow64( HANDLE hProcess );
+    BRANDENBONE_API ~NativeWow64();
 
     /// <summary>
     /// Allocate virtual memory

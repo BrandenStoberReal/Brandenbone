@@ -4,7 +4,7 @@
 #include "../Include/Macro.h"
 #include <3rd_party/VersionApi.h>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 #ifdef COMPILER_GCC

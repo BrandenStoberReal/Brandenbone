@@ -8,7 +8,7 @@
 
 #include <vector>
 
-namespace blackbone
+namespace BrandenBone
 {
 
 ImageNET::ImageNET( void )

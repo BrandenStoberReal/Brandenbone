@@ -2,7 +2,7 @@
 #include "../Symbols/SymbolData.h"
 #include "../PE/PEImage.h"
 
-namespace blackbone
+namespace BrandenBone
 {
 
 /// <summary>

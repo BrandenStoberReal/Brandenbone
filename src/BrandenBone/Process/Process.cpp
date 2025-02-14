@@ -4,7 +4,7 @@
 
 #include <memory>
 
-namespace blackbone
+namespace BrandenBone
 {
 #define SystemHandleInformation (SYSTEM_INFORMATION_CLASS)16
 #define ObjectNameInformation   (OBJECT_INFORMATION_CLASS)1
