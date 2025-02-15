@@ -37,27 +37,63 @@ NTSTATUS BBApcInject(IN PINJECT_BUFFER pUserBuf, IN PEPROCESS pProcess, IN ULONG
 #pragma alloc_text(PAGE, BBLookupProcessThread)
 
 /// <summary>
-/// Inject dll into process
+/// Injects a DLL into a specified process using various techniques.
 /// </summary>
-/// <param name="pid">Target PID</param>
-/// <param name="pPath">TFull-qualified dll path</param>
-/// <returns>Status code</returns>
+/// <param name="pData">
+/// A pointer to an INJECT_DLL structure containing information about the target process,
+/// the DLL to inject, and the injection method to use.  This structure encapsulates
+/// the PID of the target process, the full path to the DLL, the injection type (Thread, APC, or MMap),
+/// and other parameters such as whether to wait for the DLL to load, whether to unlink the module from the
+/// loader list, and whether to erase the PE header after injection.
+/// </param>
+/// <returns>
+/// An NTSTATUS code indicating the success or failure of the DLL injection.
+/// STATUS_SUCCESS indicates that the DLL was successfully injected. Other status codes
+/// indicate specific error conditions encountered during the injection process.
+/// </returns>
+/// <remarks>
+/// This function performs DLL injection into a target process using one of several methods:
+/// <list type="bullet">
+///   <item>
+///     <term>IT_Thread:</term>
+///     <description>Creates a new thread in the target process to load the DLL.</description>
+///   </item>
+///   <item>
+///     <term>IT_Apc:</term>
+///     <description>Uses Asynchronous Procedure Calls (APCs) to load the DLL in the context of an existing thread.</description>
+///   </item>
+///   <item>
+///     <term>IT_MMap:</term>
+///     <description>Manually maps the DLL image into the target process's memory.</description>
+///   </item>
+/// </list>
+/// The function first retrieves the EPROCESS object for the target process. Then, depending on the injection
+/// type specified in pData, it proceeds with the corresponding injection method. The function handles
+/// potential errors, such as the target process terminating or failing to retrieve necessary module
+/// addresses. It also includes options to disable process protection temporarily, unlink the injected
+/// module from the loader list, and erase the PE header of the injected DLL to evade detection.
+///
+/// The function utilizes kernel-mode APIs such as PsLookupProcessByProcessId, KeStackAttachProcess,
+/// and ZwCreateThreadEx to perform the injection. It also uses helper functions like BBGetUserModule,
+/// BBGetModuleExport, BBExecuteInNewThread, and BBApcInject to facilitate the injection process.
+/// </remarks>
 NTSTATUS BBInjectDll(IN PINJECT_DLL pData)
 {
-	NTSTATUS status = STATUS_SUCCESS;
-	NTSTATUS threadStatus = STATUS_SUCCESS;
-	PEPROCESS pProcess = NULL;
+	NTSTATUS status = STATUS_SUCCESS; // Initialize the status to success. This will be updated if any step fails.
+	NTSTATUS threadStatus = STATUS_SUCCESS; // Initialize thread status, used when creating new threads.
+	PEPROCESS pProcess = NULL; // Pointer to the target process's EPROCESS object.
 
+	// Get the EPROCESS object for the target process based on its PID.
 	status = PsLookupProcessByProcessId((HANDLE)pData->pid, &pProcess);
 	if (NT_SUCCESS(status))
 	{
-		KAPC_STATE apc;
-		UNICODE_STRING ustrPath, ustrNtdll;
-		SET_PROC_PROTECTION prot = { 0 };
-		PVOID pNtdll = NULL;
-		PVOID LdrLoadDll = NULL;
-		PVOID systemBuffer = NULL;
-		BOOLEAN isWow64 = (PsGetProcessWow64Process(pProcess) != NULL) ? TRUE : FALSE;
+		KAPC_STATE apc; // APC state structure for attaching to the target process.
+		UNICODE_STRING ustrPath, ustrNtdll; // Unicode strings to hold the DLL path and "Ntdll.dll".
+		SET_PROC_PROTECTION prot = { 0 }; // Structure to hold process protection settings.
+		PVOID pNtdll = NULL; // Base address of Ntdll.dll in the target process.
+		PVOID LdrLoadDll = NULL; // Address of the LdrLoadDll function in the target process.
+		PVOID systemBuffer = NULL; // Buffer in system space to hold the image if manual mapping is used.
+		BOOLEAN isWow64 = (PsGetProcessWow64Process(pProcess) != NULL) ? TRUE : FALSE; // Flag indicating if the target process is a WOW64 process (32-bit on 64-bit).
 
 		// Process in signaled state, abort any operations
 		if (BBCheckProcessTermination(PsGetCurrentProcess()))
@@ -91,8 +127,10 @@ NTSTATUS BBInjectDll(IN PINJECT_DLL pData)
 			}
 		}
 
+		// Attach to the target process's address space.  This is necessary to operate within its memory.
 		KeStackAttachProcess(pProcess, &apc);
 
+		// Initialize Unicode strings for the DLL path and "Ntdll.dll".
 		RtlInitUnicodeString(&ustrPath, pData->FullDllPath);
 		RtlInitUnicodeString(&ustrNtdll, L"Ntdll.dll");
 
@@ -123,6 +161,7 @@ NTSTATUS BBInjectDll(IN PINJECT_DLL pData)
 		// Get ntdll base
 		pNtdll = BBGetUserModule(pProcess, &ustrNtdll, isWow64);
 
+		// If failed to get ntdll base, set error
 		if (!pNtdll)
 		{
 			DPRINT("BrandenBone: %s: Failed to get Ntdll base\n", __FUNCTION__);
@@ -244,31 +283,44 @@ NTSTATUS BBInjectDll(IN PINJECT_DLL pData)
 			BBSetProtection(&prot);
 		}
 
+		// Detach from the target process's address space.
 		KeUnstackDetachProcess(&apc);
 	}
 	else
 		DPRINT("BrandenBone: %s: PsLookupProcessByProcessId failed with status 0x%X\n", __FUNCTION__, status);
 
+	// Dereference the EPROCESS object to release the reference.
 	if (pProcess)
 		ObDereferenceObject(pProcess);
 
-	return status;
-}
+	return status; // Return the final status of the operation.
+}/// <summary>
 
 /// <summary>
-/// Build injection code for wow64 process
-/// Must be running in target process context
+/// Builds injection code for a WoW64 (Windows 32-bit on Windows 64-bit) process.
+/// This function must be executed within the context of the target process.
 /// </summary>
-/// <param name="LdrLoadDll">LdrLoadDll address</param>
-/// <param name="pPath">Path to the dll</param>
-/// <returns>Code pointer. When not needed, it should be freed with ZwFreeVirtualMemory</returns>
+/// <param name="LdrLoadDll">The address of the LdrLoadDll function in the target process.</param>
+/// <param name="pPath">A pointer to a UNICODE_STRING structure containing the path to the DLL to be injected.</param>
+/// <returns>A pointer to the allocated buffer containing the injection code.
+///          This buffer must be freed using ZwFreeVirtualMemory when it is no longer needed.
+///          Returns NULL if the allocation fails.</returns>
 PINJECT_BUFFER BBGetWow64Code(IN PVOID LdrLoadDll, IN PUNICODE_STRING pPath)
 {
-	NTSTATUS status = STATUS_SUCCESS;
-	PINJECT_BUFFER pBuffer = NULL;
-	SIZE_T size = PAGE_SIZE;
+	NTSTATUS status = STATUS_SUCCESS; // Initialize NTSTATUS to SUCCESS
+	PINJECT_BUFFER pBuffer = NULL;    // Initialize the buffer pointer to NULL
+	SIZE_T size = PAGE_SIZE;          // Set the allocation size to one page
 
-	// Code
+	// Shellcode to be injected into the target process.
+	// This code performs the following actions:
+	// 1. Pushes the address of the module handle onto the stack.
+	// 2. Pushes the address of the DLL path onto the stack.
+	// 3. Pushes flags (0) for LdrLoadDll onto the stack.
+	// 4. Pushes a flag indicating the path is a file path (0) onto the stack.
+	// 5. Calls LdrLoadDll to load the DLL.
+	// 6. Sets a completion flag to indicate that the DLL has been loaded.
+	// 7. Stores the NTSTATUS return value from LdrLoadDll.
+	// 8. Returns from the injected code.
 	UCHAR code[] =
 	{
 		0x68, 0, 0, 0, 0,                       // push ModuleHandle            offset +1
@@ -283,92 +335,100 @@ PINJECT_BUFFER BBGetWow64Code(IN PVOID LdrLoadDll, IN PUNICODE_STRING pPath)
 		0xC2, 0x04, 0x00                        // ret 4
 	};
 
+	// Allocate a page of memory in the current process with execute, read, and write permissions.
 	status = ZwAllocateVirtualMemory(ZwCurrentProcess(), &pBuffer, 0, &size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 	if (NT_SUCCESS(status))
 	{
-		// Copy path
-		PUNICODE_STRING32 pUserPath = &pBuffer->path32;
-		pUserPath->Length = pPath->Length;
-		pUserPath->MaximumLength = pPath->MaximumLength;
-		pUserPath->Buffer = (ULONG)(ULONG_PTR)pBuffer->buffer;
+		// Initialize the UNICODE_STRING32 structure within the allocated buffer.
+		// This structure is used to pass the DLL path to LdrLoadDll in the target process.
+		PUNICODE_STRING32 pUserPath = &pBuffer->path32;                  // Get a pointer to the UNICODE_STRING32 structure within the buffer
+		pUserPath->Length = pPath->Length;                               // Set the length of the string
+		pUserPath->MaximumLength = pPath->MaximumLength;                 // Set the maximum length of the string
+		pUserPath->Buffer = (ULONG)(ULONG_PTR)pBuffer->buffer;           // Set the buffer pointer to the start of the buffer within the allocated page
 
-		// Copy path
+		// Copy the DLL path from the input pPath to the buffer in the target process.
 		memcpy((PVOID)pUserPath->Buffer, pPath->Buffer, pPath->Length);
 
-		// Copy code
+		// Copy the shellcode into the allocated buffer.
 		memcpy(pBuffer, code, sizeof(code));
 
-		// Fill stubs
-		*(ULONG*)((PUCHAR)pBuffer + 1) = (ULONG)(ULONG_PTR)&pBuffer->module;
-		*(ULONG*)((PUCHAR)pBuffer + 6) = (ULONG)(ULONG_PTR)pUserPath;
-		*(ULONG*)((PUCHAR)pBuffer + 15) = (ULONG)((ULONG_PTR)LdrLoadDll - ((ULONG_PTR)pBuffer + 15) - 5 + 1);
-		*(ULONG*)((PUCHAR)pBuffer + 20) = (ULONG)(ULONG_PTR)&pBuffer->complete;
-		*(ULONG*)((PUCHAR)pBuffer + 31) = (ULONG)(ULONG_PTR)&pBuffer->status;
+		// Fill in the placeholders in the shellcode with the appropriate addresses.
+		// These addresses are relative to the allocated buffer in the target process.
+		*(ULONG*)((PUCHAR)pBuffer + 1) = (ULONG)(ULONG_PTR)&pBuffer->module;                                  // Address of module handle
+		*(ULONG*)((PUCHAR)pBuffer + 6) = (ULONG)(ULONG_PTR)pUserPath;                                          // Address of the path to the DLL
+		*(ULONG*)((PUCHAR)pBuffer + 15) = (ULONG)((ULONG_PTR)LdrLoadDll - ((ULONG_PTR)pBuffer + 15) - 5);  // Relative address of LdrLoadDll
+		*(ULONG*)((PUCHAR)pBuffer + 20) = (ULONG)(ULONG_PTR)&pBuffer->complete;                                // Address of the completion flag
+		*(ULONG*)((PUCHAR)pBuffer + 31) = (ULONG)(ULONG_PTR)&pBuffer->status;                                  // Address of the status variable
 
-		return pBuffer;
+		return pBuffer; // Return the pointer to the allocated buffer containing the shellcode
 	}
 
-	UNREFERENCED_PARAMETER(pPath);
-	return NULL;
+	UNREFERENCED_PARAMETER(pPath); // Prevent compiler warning about unused parameter
+	return NULL;                   // Return NULL if allocation failed
 }
 
 /// <summary>
+/// Return NULL if memory allocation failed
 /// Build injection code for native x64 process
 /// Must be running in target process context
 /// </summary>
-/// <param name="LdrLoadDll">LdrLoadDll address</param>
-/// <param name="pPath">Path to the dll</param>
-/// <returns>Code pointer. When not needed it should be freed with ZwFreeVirtualMemory</returns>
+/// <param name="LdrLoadDll">Address of LdrLoadDll function in the target process.</param>
+/// <param name="pPath">Path to the DLL to be injected, represented as a UNICODE_STRING.</param>
+/// <returns>Pointer to the allocated buffer containing the injection code.
+///          This buffer must be freed with ZwFreeVirtualMemory when it's no longer needed.
+///          Returns NULL if memory allocation fails.</returns>
 PINJECT_BUFFER BBGetNativeCode(IN PVOID LdrLoadDll, IN PUNICODE_STRING pPath)
 {
 	NTSTATUS status = STATUS_SUCCESS;
 	PINJECT_BUFFER pBuffer = NULL;
 	SIZE_T size = PAGE_SIZE;
 
-	// Code
+	// Code: x64 assembly instructions for DLL injection.
 	UCHAR code[] =
 	{
-		0x48, 0x83, 0xEC, 0x28,                 // sub rsp, 0x28
-		0x48, 0x31, 0xC9,                       // xor rcx, rcx
-		0x48, 0x31, 0xD2,                       // xor rdx, rdx
-		0x49, 0xB8, 0, 0, 0, 0, 0, 0, 0, 0,     // mov r8, ModuleFileName   offset +12
-		0x49, 0xB9, 0, 0, 0, 0, 0, 0, 0, 0,     // mov r9, ModuleHandle     offset +28
-		0x48, 0xB8, 0, 0, 0, 0, 0, 0, 0, 0,     // mov rax, LdrLoadDll      offset +32
-		0xFF, 0xD0,                             // call rax
-		0x48, 0xBA, 0, 0, 0, 0, 0, 0, 0, 0,     // mov rdx, COMPLETE_OFFSET offset +44
-		0xC7, 0x02, 0x7E, 0x1E, 0x37, 0xC0,     // mov [rdx], CALL_COMPLETE
-		0x48, 0xBA, 0, 0, 0, 0, 0, 0, 0, 0,     // mov rdx, STATUS_OFFSET   offset +60
-		0x89, 0x02,                             // mov [rdx], eax
-		0x48, 0x83, 0xC4, 0x28,                 // add rsp, 0x28
-		0xC3                                    // ret
+		0x48, 0x83, 0xEC, 0x28,                 // sub rsp, 0x28 - Allocate stack space (40 bytes)
+		0x48, 0x31, 0xC9,                       // xor rcx, rcx - Zero out RCX (first argument to LdrLoadDll, reserved)
+		0x48, 0x31, 0xD2,                       // xor rdx, rdx - Zero out RDX (flags argument to LdrLoadDll, reserved)
+		0x49, 0xB8, 0, 0, 0, 0, 0, 0, 0, 0,     // mov r8, ModuleFileName   offset +12 - Move the address of the DLL path into R8 (third argument to LdrLoadDll)
+		0x49, 0xB9, 0, 0, 0, 0, 0, 0, 0, 0,     // mov r9, ModuleHandle     offset +22 - Move the address of the ModuleHandle into R9 (fourth argument to LdrLoadDll)
+		0x48, 0xB8, 0, 0, 0, 0, 0, 0, 0, 0,     // mov rax, LdrLoadDll      offset +32 - Move the address of LdrLoadDll into RAX
+		0xFF, 0xD0,                             // call rax            - Call LdrLoadDll
+		0x48, 0xBA, 0, 0, 0, 0, 0, 0, 0, 0,     // mov rdx, COMPLETE_OFFSET offset +44 - Move address of completion flag to rdx
+		0xC7, 0x02, 0x7E, 0x1E, 0x37, 0xC0,     // mov [rdx], CALL_COMPLETE   - Set completion flag
+		0x48, 0xBA, 0, 0, 0, 0, 0, 0, 0, 0,     // mov rdx, STATUS_OFFSET   offset +60 - Move address of status variable to rdx
+		0x89, 0x02,                             // mov [rdx], eax            - Store the return status of LdrLoadDll
+		0x48, 0x83, 0xC4, 0x28,                 // add rsp, 0x28             - Restore stack pointer
+		0xC3                                    // ret                       - Return
 	};
 
+	// Allocate a page-sized buffer in the target process with execute read/write permissions.
 	status = ZwAllocateVirtualMemory(ZwCurrentProcess(), &pBuffer, 0, &size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 	if (NT_SUCCESS(status))
 	{
-		// Copy path
+		// Initialize the UNICODE_STRING structure within the allocated buffer.
 		PUNICODE_STRING pUserPath = &pBuffer->path;
-		pUserPath->Length = 0;
-		pUserPath->MaximumLength = sizeof(pBuffer->buffer);
-		pUserPath->Buffer = pBuffer->buffer;
+		pUserPath->Length = 0;                             // Initial length is zero
+		pUserPath->MaximumLength = sizeof(pBuffer->buffer); // Maximum length is the size of the buffer
+		pUserPath->Buffer = pBuffer->buffer;               // Buffer points to the character array
 
+		// Copy the DLL path from the input pPath to the newly allocated buffer.
 		RtlUnicodeStringCopy(pUserPath, pPath);
 
-		// Copy code
+		// Copy the x64 assembly code into the allocated buffer.
 		memcpy(pBuffer, code, sizeof(code));
 
-		// Fill stubs
-		*(ULONGLONG*)((PUCHAR)pBuffer + 12) = (ULONGLONG)pUserPath;
-		*(ULONGLONG*)((PUCHAR)pBuffer + 22) = (ULONGLONG)&pBuffer->module;
-		*(ULONGLONG*)((PUCHAR)pBuffer + 32) = (ULONGLONG)LdrLoadDll;
-		*(ULONGLONG*)((PUCHAR)pBuffer + 44) = (ULONGLONG)&pBuffer->complete;
-		*(ULONGLONG*)((PUCHAR)pBuffer + 60) = (ULONGLONG)&pBuffer->status;
+		// Fill in the address stubs within the copied code with the appropriate values.
+		*(ULONGLONG*)((PUCHAR)pBuffer + 12) = (ULONGLONG)pUserPath;       // Address of the DLL path
+		*(ULONGLONG*)((PUCHAR)pBuffer + 22) = (ULONGLONG)&pBuffer->module;  // Address to store the loaded module handle (output)
+		*(ULONGLONG*)((PUCHAR)pBuffer + 32) = (ULONGLONG)LdrLoadDll;      // Address of LdrLoadDll
+		*(ULONGLONG*)((PUCHAR)pBuffer + 44) = (ULONGLONG)&pBuffer->complete; // Address of the completion flag
+		*(ULONGLONG*)((PUCHAR)pBuffer + 60) = (ULONGLONG)&pBuffer->status;   // Address to store the NTSTATUS code
 
-		return pBuffer;
+		return pBuffer; // Return the pointer to the allocated buffer
 	}
 
-	UNREFERENCED_PARAMETER(pPath);
-	return NULL;
+	UNREFERENCED_PARAMETER(pPath); // Avoid compiler warning about unused parameter in case of failure
+	return NULL; // Return NULL if memory allocation failed
 }
 
 /// <summary>

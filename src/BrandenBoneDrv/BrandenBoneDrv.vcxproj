@@ -300,6 +300,7 @@
   <ItemGroup>
     <ClCompile Include="BrandenBoneDrv.c" />
     <ClCompile Include="Dispatch.c" />
+    <ClCompile Include="Hooks.c" />
     <ClCompile Include="Inject.c" />
     <ClCompile Include="ldrreloc.c" />
     <ClCompile Include="Loader.c" />
@@ -315,6 +316,7 @@
   <ItemGroup>
     <ClInclude Include="BrandenBoneDrv.h" />
     <ClInclude Include="BrandenBoneDef.h" />
+    <ClInclude Include="Hooks.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Imports.h" />
     <ClInclude Include="Loader.h" />

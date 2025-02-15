@@ -40,6 +40,9 @@
     <ClCompile Include="VadRoutines.c">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Hooks.c">
+      <Filter>Hooking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Remap.h">
@@ -93,6 +96,9 @@
     <ClInclude Include="Utils.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Include\Hooking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include">
@@ -109,6 +115,12 @@
     </Filter>
     <Filter Include="Helpers">
       <UniqueIdentifier>{2ad9b16d-24eb-4a97-bb5b-d815b83b78c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hooking">
+      <UniqueIdentifier>{fb079528-e434-4a80-9932-dfbd546349d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Hooking">
+      <UniqueIdentifier>{de71fb25-cfb2-47b2-93f6-9181b1fe42ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
