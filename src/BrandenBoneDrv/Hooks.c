@@ -1,4 +1,3 @@
-// Hooks.c
 #include "Hooks.h"
 #include <wdm.h>
 #include "Private.h"
@@ -6,6 +5,9 @@
 #pragma warning(disable:4047)
 #pragma warning(disable:4024)
 
+#pragma alloc_text(PAGE, ReadExcludedNamesFromFile)
+#pragma alloc_text(PAGE, FilterFileInformation)
+#pragma alloc_text(PAGE, CleanupExcludedNames)
 #pragma alloc_text(PAGE, BbUninstallNtQueryDirectoryFileHook)
 
 IAT_HOOK_INFO NtQueryDirectoryFileHookInfo;
@@ -612,16 +614,15 @@ NTSTATUS BbInstallNtQueryDirectoryFileHook()
 
 /*++
 Routine Description:
-	Unloads the driver and removes the NtQueryDirectoryFile hook.
+	Removes the NtQueryDirectoryFile hook.
 
 Arguments:
-	DriverObject - Pointer to the driver object.
+	None.
 
 Return Value:
 	VOID
 --*/
-VOID
-BbUninstallNtQueryDirectoryFileHook()
+VOID BbUninstallNtQueryDirectoryFileHook()
 {
 	NTSTATUS status = RemoveIATHook(&NtQueryDirectoryFileHookInfo);
 	if (!NT_SUCCESS(status)) {
