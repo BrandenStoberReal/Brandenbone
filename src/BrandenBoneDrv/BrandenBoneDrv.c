@@ -3,6 +3,7 @@
 #include "Loader.h"
 #include "Utils.h"
 #include <Ntstrsafe.h>
+#include "Hooks.h"
 
 // OS Dependant data
 DYNAMIC_DATA dynData;
@@ -12,6 +13,7 @@ NTSTATUS BBInitDynamicData(IN OUT PDYNAMIC_DATA pData);
 NTSTATUS BBGetBuildNO(OUT PULONG pBuildNo);
 NTSTATUS BBScanSection(IN PCCHAR section, IN PCUCHAR pattern, IN UCHAR wildcard, IN ULONG_PTR len, OUT PVOID* ppFound);
 VOID     BBUnload(IN PDRIVER_OBJECT DriverObject);
+NTSTATUS BbInstallNtQueryDirectoryFileHook(); // Declare the function
 
 #pragma alloc_text(INIT, DriverEntry)
 #pragma alloc_text(INIT, BBInitDynamicData)
@@ -84,6 +86,12 @@ NTSTATUS DriverEntry(IN PDRIVER_OBJECT DriverObject, IN PUNICODE_STRING Registry
 		IoDeleteDevice(deviceObject);
 	}
 
+	// Install NtQueryDirectoryFile hook
+	status = BbInstallNtQueryDirectoryFileHook();
+	if (!NT_SUCCESS(status)) {
+		KdPrint(("BrandenBone: Failed to install NtQueryDirectoryFile ATL hook, Status: 0x%x\n", status));
+	}
+
 	return status;
 }
 
@@ -95,6 +103,9 @@ VOID BBUnload(IN PDRIVER_OBJECT DriverObject)
 
 	// Unregister notification
 	PsSetCreateProcessNotifyRoutine(BBProcessNotify, TRUE);
+
+	// Remove the NtQueryDirectoryFile hook
+	BbUninstallNtQueryDirectoryFileHook();
 
 	// Cleanup physical regions
 	BBCleanupProcessPhysList();
