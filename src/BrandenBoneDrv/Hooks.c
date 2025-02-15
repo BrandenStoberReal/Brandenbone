@@ -6,6 +6,8 @@
 #pragma warning(disable:4047)
 #pragma warning(disable:4024)
 
+#pragma alloc_text(PAGE, BbUninstallNtQueryDirectoryFileHook)
+
 IAT_HOOK_INFO NtQueryDirectoryFileHookInfo;
 
 /// <summary>
