@@ -2,6 +2,15 @@
 
 ### Windows memory hacking library - now with 100% more Branden
 
+## Issues
+- Missing EPROCESS/KPROCESS/ETHREAD/KTHREAD offsets for a few versions
+- Missing all SSDT offsets
+- Code is half working and half zombified mess
+- Needs major code modernization across the board
+- Pythonic blackbone remains unfinished and seemingly abandoned
+- Driver is signature-detected by every anticheat known to man
+- ATL hooking is highly unstable
+
 ## Features
 
 - **x86 and x64 support**
