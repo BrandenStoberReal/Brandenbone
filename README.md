@@ -5,6 +5,8 @@
 ## Features
 
 - **x86 and x64 support**
+- **Windows 11 23H2/24H2 Support**
+- **Windows 8+ Compatible**
 
 **Process interaction**
  - Manage PEB32/PEB64
