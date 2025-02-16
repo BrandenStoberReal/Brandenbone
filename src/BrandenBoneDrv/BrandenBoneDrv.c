@@ -513,6 +513,50 @@ NTSTATUS BBInitDynamicData(IN OUT PDYNAMIC_DATA pData)
 					pData->ExRemoveTable -= 0x34;
 				break;
 			}
+			else if (verInfo.dwBuildNumber == 19044)
+			{
+				pData->ver = WINVER_10_21H2;
+				// KP
+				pData->KExecOpt = 0x283;
+				// EP
+				pData->Protection = 0x87A;
+				pData->EProcessFlags2 = 0x9D4;    // MitigationFlags offset
+				pData->ObjTable = 0x570;
+				pData->VadRoot = 0x7D8;
+				// KT
+				pData->PrevMode = 0x232;
+				// ET
+				pData->ExitStatus = 0x548;
+				// SSDT
+				pData->NtCreateThdExIndex = 0xC1;
+				pData->NtTermThdIndex = 0x53;
+				pData->MiAllocPage = 0;
+				if (NT_SUCCESS(BBScanSection("PAGE", (PCUCHAR)"\x48\x83\xC7\x18\x48\x8B\x17", 0xCC, 7, (PVOID)&pData->ExRemoveTable)))
+					pData->ExRemoveTable -= 0x34;
+				break;
+			}
+			else if (verInfo.dwBuildNumber == 19045)
+			{
+				pData->ver = WINVER_10_22H2;
+				// KP
+				pData->KExecOpt = 0x283;
+				// EP
+				pData->Protection = 0x87A;
+				pData->EProcessFlags2 = 0x9D4;    // MitigationFlags offset
+				pData->ObjTable = 0x570;
+				pData->VadRoot = 0x7D8;
+				// KT
+				pData->PrevMode = 0x232;
+				// ET
+				pData->ExitStatus = 0x548;
+				// SSDT
+				pData->NtCreateThdExIndex = 0xC1;
+				pData->NtTermThdIndex = 0x53;
+				pData->MiAllocPage = 0;
+				if (NT_SUCCESS(BBScanSection("PAGE", (PCUCHAR)"\x48\x83\xC7\x18\x48\x8B\x17", 0xCC, 7, (PVOID)&pData->ExRemoveTable)))
+					pData->ExRemoveTable -= 0x34;
+				break;
+			}
 			else if (verInfo.dwBuildNumber == 22631)
 			{
 				pData->ver = WINVER_10_23H2;
