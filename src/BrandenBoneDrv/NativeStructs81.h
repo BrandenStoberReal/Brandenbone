@@ -8,8 +8,8 @@
 
 typedef struct _MM_AVL_NODE // Size=24
 {
-	struct _MM_AVL_NODE* LeftChild; // Size=8 Offset=0
-	struct _MM_AVL_NODE* RightChild; // Size=8 Offset=8
+	struct _MM_AVL_NODE* Left; // Size=8 Offset=0
+	struct _MM_AVL_NODE* Right; // Size=8 Offset=8
 
 	union ___unnamed1666 // Size=8
 	{
@@ -23,7 +23,7 @@ typedef struct _MM_AVL_NODE // Size=24
 
 typedef struct _RTL_AVL_TREE // Size=8
 {
-	PMM_AVL_NODE BalancedRoot; // Size=8 Offset=0
+	PMM_AVL_NODE Root; // Size=8 Offset=0
 	void* NodeHint; // Size=8 Offset=1504
 	unsigned __int64 NumberGenericTableElements; // Size=8 Offset=1512
 } RTL_AVL_TREE, * PRTL_AVL_TREE, * PMM_AVL_TABLE;
@@ -150,4 +150,4 @@ typedef struct _HANDLE_TABLE
 
 #pragma warning(default : 4214 4201)
 
-#define GET_VAD_ROOT(Table) Table->BalancedRoot
+#define GET_VAD_ROOT(Table) Table->Root

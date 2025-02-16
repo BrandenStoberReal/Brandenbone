@@ -5,10 +5,11 @@
 #pragma alloc_text(PAGE, MiRebalanceNode)
 #pragma alloc_text(PAGE, MiRemoveNode)
 #pragma alloc_text(PAGE, MiFindNodeOrParent)
+#pragma warning(disable:4047)
 
 VOID
 MiPromoteNode(
-	IN PMMADDRESS_NODE C
+	IN PRTL_BALANCED_NODE C
 )
 
 /*++
@@ -48,22 +49,22 @@ MiPromoteNode(
 --*/
 
 {
-	PMMADDRESS_NODE P;
-	PMMADDRESS_NODE G;
+	PRTL_BALANCED_NODE P;
+	PRTL_BALANCED_NODE G;
 
 	//
 	// Capture the current parent and grandparent (may be the root).
 	//
 
-	P = SANITIZE_PARENT_NODE(C->u1.Parent);
-	G = SANITIZE_PARENT_NODE(P->u1.Parent);
+	P = SANITIZE_PARENT_NODE(C->ParentValue);
+	G = SANITIZE_PARENT_NODE(P->ParentValue);
 
 	//
 	// Break down the promotion into two cases based upon whether C
 	// is a left or right child.
 	//
 
-	if (P->LeftChild == C) {
+	if (P->Left == C) {
 		//
 		// This promotion looks like this:
 		//
@@ -76,13 +77,13 @@ MiPromoteNode(
                                                 //      x   y           y   z
 		//
 
-		P->LeftChild = C->RightChild;
+		P->Left = C->Left;
 
-		if (P->LeftChild != NULL) {
-			P->LeftChild->u1.Parent = MI_MAKE_PARENT(P, P->LeftChild->u1.Balance);
+		if (P->Left != NULL) {
+			P->Left->ParentValue = MI_MAKE_PARENT(P, P->Left->Balance);
 		}
 
-		C->RightChild = P;
+		C->Right = P;
 
 		//
 		// Fall through to update parent and G <-> C relationship in
@@ -102,37 +103,37 @@ MiPromoteNode(
                                                 //        y   z       x   y
 		//
 
-		P->RightChild = C->LeftChild;
+		P->Right = C->Left;
 
-		if (P->RightChild != NULL) {
-			P->RightChild->u1.Parent = MI_MAKE_PARENT(P, P->RightChild->u1.Balance);
+		if (P->Right != NULL) {
+			P->Right->ParentValue = MI_MAKE_PARENT(P, P->Right->Balance);
 		}
 
-		C->LeftChild = P;
+		C->Left = P;
 	}
 
 	//
 	// Update parent of P, for either case above.
 	//
 
-	P->u1.Parent = MI_MAKE_PARENT(C, P->u1.Balance);
+	P->ParentValue = MI_MAKE_PARENT(C, P->Balance);
 
 	//
 	// Finally update G <-> C links for either case above.
 	//
 
-	if (G->LeftChild == P) {
-		G->LeftChild = C;
+	if (G->Left == P) {
+		G->Left = C;
 	}
 	else {
-		G->RightChild = C;
+		G->Right = C;
 	}
-	C->u1.Parent = MI_MAKE_PARENT(G, C->u1.Balance);
+	C->ParentValue = MI_MAKE_PARENT(G, C->Balance);
 }
 
 ULONG
 MiRebalanceNode(
-	IN PMMADDRESS_NODE S
+	IN PRTL_BALANCED_NODE S
 )
 
 /*++
@@ -170,20 +171,20 @@ MiRebalanceNode(
 --*/
 
 {
-	PMMADDRESS_NODE R, P;
+	PRTL_BALANCED_NODE R, P;
 	SCHAR a;
 
 	//
 	// Capture which side is unbalanced.
 	//
 
-	a = (SCHAR)S->u1.Balance;
+	a = (SCHAR)S->Balance;
 
 	if (a == +1) {
-		R = S->RightChild;
+		R = S->Right;
 	}
 	else {
-		R = S->LeftChild;
+		R = S->Left;
 	}
 
 	//
@@ -211,10 +212,10 @@ MiRebalanceNode(
 	// rebalance it is h+2, so rebalancing must continue up the tree.
 	//
 
-	if ((SCHAR)R->u1.Balance == a) {
+	if ((SCHAR)R->Balance == a) {
 		MiPromoteNode(R);
-		R->u1.Balance = 0;
-		S->u1.Balance = 0;
+		R->Balance = 0;
+		S->Balance = 0;
 
 		return FALSE;
 	}
@@ -262,16 +263,16 @@ MiRebalanceNode(
 	// rebalance it is h+2, so rebalancing must continue up the tree.
 	//
 
-	if ((SCHAR)R->u1.Balance == -a) {
+	if ((SCHAR)R->Balance == -a) {
 		//
 		// Pick up the appropriate child P for the double rotation (Link(-a,R)).
 		//
 
 		if (a == 1) {
-			P = R->LeftChild;
+			P = R->Left;
 		}
 		else {
-			P = R->RightChild;
+			P = R->Right;
 		}
 
 		//
@@ -285,24 +286,24 @@ MiRebalanceNode(
 		// Now adjust the balance factors.
 		//
 
-		S->u1.Balance = 0;
-		R->u1.Balance = 0;
-		if ((SCHAR)P->u1.Balance == a) {
+		S->Balance = 0;
+		R->Balance = 0;
+		if ((SCHAR)P->Balance == a) {
 			COUNT_BALANCE_MAX((SCHAR)-a);
-			S->u1.Balance = (ULONG_PTR)-a;
+			S->Balance = (ULONG_PTR)-a;
 		}
-		else if ((SCHAR)P->u1.Balance == -a) {
+		else if ((SCHAR)P->Balance == -a) {
 			COUNT_BALANCE_MAX((SCHAR)a);
-			R->u1.Balance = (ULONG_PTR)a;
+			R->Balance = (ULONG_PTR)a;
 		}
 
-		P->u1.Balance = 0;
+		P->Balance = 0;
 		return FALSE;
 	}
 
 	//
 	// Otherwise this is Case 3 which can only happen on Delete (identical
-	// to Case 1 except R->u1.Balance == 0).  We do a single rotation, adjust
+	// to Case 1 except R->Balance == 0).  We do a single rotation, adjust
 	// the balance factors appropriately, and return TRUE.  Note that the
 	// balance of S stays the same.
 	//
@@ -331,7 +332,7 @@ MiRebalanceNode(
 
 	MiPromoteNode(R);
 	COUNT_BALANCE_MAX((SCHAR)-a);
-	R->u1.Balance = -a;
+	R->Balance = -a;
 	return TRUE;
 }
 
@@ -383,8 +384,8 @@ Kernel mode.  The PFN lock is held for some of the tables.
 	// We just check that the table isn't getting too big.
 	//
 
-	NodeToInsert->LeftChild = NULL;
-	NodeToInsert->RightChild = NULL;
+	NodeToInsert->Left = NULL;
+	NodeToInsert->Right = NULL;
 
 	Table->NumberGenericTableElements += 1;
 
@@ -393,8 +394,8 @@ Kernel mode.  The PFN lock is held for some of the tables.
 	//
 
 	if (SearchResult == TableEmptyTree) {
-		Table->BalancedRoot.RightChild = NodeToInsert;
-		NodeToInsert->u1.Parent = &Table->BalancedRoot;
+		Table->Root.Right = NodeToInsert;
+		NodeToInsert->ParentValue = &Table->Root;
 		Table->DepthOfTree = 1;
 	}
 	else {
@@ -402,13 +403,13 @@ Kernel mode.  The PFN lock is held for some of the tables.
 		PMMADDRESS_NODE S = NodeOrParent;
 
 		if (SearchResult == TableInsertAsLeft) {
-			NodeOrParent->LeftChild = NodeToInsert;
+			NodeOrParent->Left = NodeToInsert;
 		}
 		else {
-			NodeOrParent->RightChild = NodeToInsert;
+			NodeOrParent->Right = NodeToInsert;
 		}
 
-		NodeToInsert->u1.Parent = NodeOrParent;
+		NodeToInsert->ParentValue = NodeOrParent;
 
 		//
 		// The above completes the standard binary tree insertion, which
@@ -422,7 +423,7 @@ Kernel mode.  The PFN lock is held for some of the tables.
 		//
 
 		COUNT_BALANCE_MAX( (SCHAR)-1 );
-		Table->BalancedRoot.u1.Balance = (ULONG_PTR)-1;
+		Table->Root.Balance = (ULONG_PTR)-1;
 
 		//
 		// Now loop to adjust balance factors and see if any balance operations
@@ -437,7 +438,7 @@ Kernel mode.  The PFN lock is held for some of the tables.
 			//
 
 			a = 1;
-			if (MiIsLeftChild( R )) {
+			if (MiIsLeft( R )) {
 				a = -1;
 			}
 
@@ -450,13 +451,13 @@ Kernel mode.  The PFN lock is held for some of the tables.
 			// down the tree as in Knuth.
 			//
 
-			if (S->u1.Balance == 0) {
+			if (S->Balance == 0) {
 				COUNT_BALANCE_MAX( (SCHAR)a );
-				S->u1.Balance = a;
+				S->Balance = a;
 				R = S;
-				S = SANITIZE_PARENT_NODE( S->u1.Parent );
+				S = SANITIZE_PARENT_NODE( S->ParentValue );
 			}
-			else if ((SCHAR)S->u1.Balance != a) {
+			else if ((SCHAR)S->Balance != a) {
 				//
 				// If this node has the opposite balance, then the tree got
 				// more balanced (or we hit the root) and we are done.
@@ -464,7 +465,7 @@ Kernel mode.  The PFN lock is held for some of the tables.
 				// Step A7.ii
 				//
 
-				S->u1.Balance = 0;
+				S->Balance = 0;
 
 				//
 				// If S is actually the root, then this means the depth
@@ -473,7 +474,7 @@ Kernel mode.  The PFN lock is held for some of the tables.
 				// it through here.)
 				//
 
-				if (Table->BalancedRoot.u1.Balance == 0) {
+				if (Table->Root.Balance == 0) {
 					Table->DepthOfTree += 1;
 				}
 
@@ -502,7 +503,7 @@ Kernel mode.  The PFN lock is held for some of the tables.
 
 VOID
 MiRemoveNode(
-	IN PMMADDRESS_NODE NodeToDelete,
+	IN PRTL_BALANCED_NODE NodeToDelete,
 	IN PMM_AVL_TABLE Table
 )
 
@@ -535,9 +536,9 @@ MiRemoveNode(
 --*/
 
 {
-	PMMADDRESS_NODE Parent;
-	PMMADDRESS_NODE EasyDelete;
-	PMMADDRESS_NODE P;
+	PRTL_BALANCED_NODE Parent;
+	PRTL_BALANCED_NODE EasyDelete;
+	PRTL_BALANCED_NODE P;
 	SCHAR a;
 
 	//
@@ -545,8 +546,8 @@ MiRemoveNode(
 	// delete it directly.
 	//
 
-	if ((NodeToDelete->LeftChild == NULL) ||
-		(NodeToDelete->RightChild == NULL)) {
+	if ((NodeToDelete->Left == NULL) ||
+		(NodeToDelete->Right == NULL)) {
 		EasyDelete = NodeToDelete;
 	}
 
@@ -556,14 +557,14 @@ MiRemoveNode(
 	// rebalance.
 	//
 
-	else if ((SCHAR)NodeToDelete->u1.Balance >= 0) {
+	else if ((SCHAR)NodeToDelete->Balance >= 0) {
 		//
 		// Pick up the subtree successor.
 		//
 
-		EasyDelete = NodeToDelete->RightChild;
-		while (EasyDelete->LeftChild != NULL) {
-			EasyDelete = EasyDelete->LeftChild;
+		EasyDelete = NodeToDelete->Right;
+		while (EasyDelete->Left != NULL) {
+			EasyDelete = EasyDelete->Left;
 		}
 	}
 	else {
@@ -571,9 +572,9 @@ MiRemoveNode(
 		// Pick up the subtree predecessor.
 		//
 
-		EasyDelete = NodeToDelete->LeftChild;
-		while (EasyDelete->RightChild != NULL) {
-			EasyDelete = EasyDelete->RightChild;
+		EasyDelete = NodeToDelete->Left;
+		while (EasyDelete->Right != NULL) {
+			EasyDelete = EasyDelete->Right;
 		}
 	}
 
@@ -588,19 +589,19 @@ MiRemoveNode(
 	// Now we can do the simple deletion for the no left child case.
 	//
 
-	if (EasyDelete->LeftChild == NULL) {
-		Parent = SANITIZE_PARENT_NODE(EasyDelete->u1.Parent);
+	if (EasyDelete->Left == NULL) {
+		Parent = SANITIZE_PARENT_NODE(EasyDelete->ParentValue);
 
-		if (MiIsLeftChild(EasyDelete)) {
-			Parent->LeftChild = EasyDelete->RightChild;
+		if (MiIsLeft(EasyDelete)) {
+			Parent->Left = EasyDelete->Right;
 		}
 		else {
-			Parent->RightChild = EasyDelete->RightChild;
+			Parent->Right = EasyDelete->Right;
 			a = 1;
 		}
 
-		if (EasyDelete->RightChild != NULL) {
-			EasyDelete->RightChild->u1.Parent = MI_MAKE_PARENT(Parent, EasyDelete->RightChild->u1.Balance);
+		if (EasyDelete->Right != NULL) {
+			EasyDelete->Right->ParentValue = MI_MAKE_PARENT(Parent, EasyDelete->Right->Balance);
 		}
 
 		//
@@ -609,18 +610,18 @@ MiRemoveNode(
 		//
 	}
 	else {
-		Parent = SANITIZE_PARENT_NODE(EasyDelete->u1.Parent);
+		Parent = SANITIZE_PARENT_NODE(EasyDelete->ParentValue);
 
-		if (MiIsLeftChild(EasyDelete)) {
-			Parent->LeftChild = EasyDelete->LeftChild;
+		if (MiIsLeft(EasyDelete)) {
+			Parent->Left = EasyDelete->Left;
 		}
 		else {
-			Parent->RightChild = EasyDelete->LeftChild;
+			Parent->Right = EasyDelete->Left;
 			a = 1;
 		}
 
-		EasyDelete->LeftChild->u1.Parent = MI_MAKE_PARENT(Parent,
-			EasyDelete->LeftChild->u1.Balance);
+		EasyDelete->Left->ParentValue = MI_MAKE_PARENT(Parent,
+			EasyDelete->Left->Balance);
 	}
 
 	//
@@ -634,7 +635,7 @@ MiRemoveNode(
 #else
 	Table->Root.Balance = 0;
 #endif
-	P = SANITIZE_PARENT_NODE(EasyDelete->u1.Parent);
+	P = SANITIZE_PARENT_NODE(EasyDelete->ParentValue);
 
 	//
 	// Loop until the tree is balanced.
@@ -647,8 +648,8 @@ MiRemoveNode(
 		// the parent.
 		//
 
-		if ((SCHAR)P->u1.Balance == a) {
-			P->u1.Balance = 0;
+		if ((SCHAR)P->Balance == a) {
+			P->Balance = 0;
 
 			//
 			// If this node is curently balanced, we can show it is now unbalanced
@@ -656,10 +657,10 @@ MiRemoveNode(
 			// (This may be the root, since we set Balance to 0 above!)
 			//
 		}
-		else if (P->u1.Balance == 0)
+		else if (P->Balance == 0)
 		{
 			COUNT_BALANCE_MAX((SCHAR)-a);
-			P->u1.Balance = -a;
+			P->Balance = -a;
 
 			//
 			// If we shortened the depth all the way back to the root, then
@@ -667,7 +668,7 @@ MiRemoveNode(
 			//
 
 #if !defined( _WIN81_ ) && !defined ( _WIN10_ )
-			if (Table->BalancedRoot.u1.Balance != 0) {
+			if (Table->Root.Balance != 0) {
 				Table->DepthOfTree -= 1;
 			}
 #endif
@@ -694,16 +695,16 @@ MiRemoveNode(
 				break;
 			}
 
-			P = SANITIZE_PARENT_NODE(P->u1.Parent);
+			P = SANITIZE_PARENT_NODE(P->ParentValue);
 		}
 
 		a = -1;
-		if (MiIsRightChild(P))
+		if (MiIsRight(P))
 		{
 			a = 1;
 		}
 
-		P = SANITIZE_PARENT_NODE(P->u1.Parent);
+		P = SANITIZE_PARENT_NODE(P->ParentValue);
 	}
 
 	//
@@ -725,29 +726,29 @@ MiRemoveNode(
 		// VAD.
 		//
 
-		EasyDelete->u1.Parent = NodeToDelete->u1.Parent;
-		EasyDelete->LeftChild = NodeToDelete->LeftChild;
-		EasyDelete->RightChild = NodeToDelete->RightChild;
+		EasyDelete->ParentValue = NodeToDelete->ParentValue;
+		EasyDelete->Left = NodeToDelete->Left;
+		EasyDelete->Right = NodeToDelete->Right;
 
-		if (MiIsLeftChild(NodeToDelete))
+		if (MiIsLeft(NodeToDelete))
 		{
-			Parent = SANITIZE_PARENT_NODE(EasyDelete->u1.Parent);
-			Parent->LeftChild = EasyDelete;
+			Parent = SANITIZE_PARENT_NODE(EasyDelete->ParentValue);
+			Parent->Left = EasyDelete;
 		}
 		else
 		{
-			Parent = SANITIZE_PARENT_NODE(EasyDelete->u1.Parent);
-			Parent->RightChild = EasyDelete;
+			Parent = SANITIZE_PARENT_NODE(EasyDelete->ParentValue);
+			Parent->Right = EasyDelete;
 		}
-		if (EasyDelete->LeftChild != NULL)
+		if (EasyDelete->Left != NULL)
 		{
-			EasyDelete->LeftChild->u1.Parent = MI_MAKE_PARENT(EasyDelete,
-				EasyDelete->LeftChild->u1.Balance);
+			EasyDelete->Left->ParentValue = MI_MAKE_PARENT(EasyDelete,
+				EasyDelete->Left->Balance);
 		}
-		if (EasyDelete->RightChild != NULL)
+		if (EasyDelete->Right != NULL)
 		{
-			EasyDelete->RightChild->u1.Parent = MI_MAKE_PARENT(EasyDelete,
-				EasyDelete->RightChild->u1.Balance);
+			EasyDelete->Right->ParentValue = MI_MAKE_PARENT(EasyDelete,
+				EasyDelete->Right->Balance);
 		}
 	}
 
