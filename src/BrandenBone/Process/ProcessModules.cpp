@@ -418,7 +418,7 @@ namespace BrandenBone
 		// Write dll name into target process
 		auto fillDllName = [&modName, &path](auto& ustr)
 			{
-				ustr.Buffer = modName->ptr<wchar_t>() + sizeof(decltype(ustr));
+				ustr.Buffer = modName->ptr<typename std::decay_t<decltype(ustr)>::type>() + sizeof(ustr);
 				ustr.MaximumLength = ustr.Length = static_cast<USHORT>(path.size() * sizeof(wchar_t));
 
 				modName->Write(0, ustr);
