@@ -5,6 +5,7 @@
 #pragma alloc_text(PAGE, MiRebalanceNode)
 #pragma alloc_text(PAGE, MiRemoveNode)
 #pragma alloc_text(PAGE, MiFindNodeOrParent)
+
 #pragma warning(disable:4047)
 
 VOID
@@ -77,7 +78,7 @@ MiPromoteNode(
                                                 //      x   y           y   z
 		//
 
-		P->Left = C->Left;
+		P->Left = C->Right;
 
 		if (P->Left != NULL) {
 			P->Left->ParentValue = MI_MAKE_PARENT(P, P->Left->Balance);
@@ -339,7 +340,7 @@ MiRebalanceNode(
 /*
 VOID
 MiInsertNode (
-IN PMMADDRESS_NODE NodeToInsert,
+IN PRTL_BALANCED_NODE NodeToInsert,
 IN PMM_AVL_TABLE Table
 )
 
@@ -371,7 +372,7 @@ Kernel mode.  The PFN lock is held for some of the tables.
 	// parent of the node.
 	//
 
-	PMMADDRESS_NODE NodeOrParent;
+	PRTL_BALANCED_NODE NodeOrParent;
 	TABLE_SEARCH_RESULT SearchResult;
 
 	SearchResult = MiFindNodeOrParent( Table,
@@ -394,13 +395,13 @@ Kernel mode.  The PFN lock is held for some of the tables.
 	//
 
 	if (SearchResult == TableEmptyTree) {
-		Table->Root.Right = NodeToInsert;
-		NodeToInsert->ParentValue = &Table->Root;
+		Table->BalancedRoot.Right = NodeToInsert;
+		NodeToInsert->ParentValue = &Table->BalancedRoot;
 		Table->DepthOfTree = 1;
 	}
 	else {
-		PMMADDRESS_NODE R = NodeToInsert;
-		PMMADDRESS_NODE S = NodeOrParent;
+		PRTL_BALANCED_NODE R = NodeToInsert;
+		PRTL_BALANCED_NODE S = NodeOrParent;
 
 		if (SearchResult == TableInsertAsLeft) {
 			NodeOrParent->Left = NodeToInsert;
@@ -423,7 +424,7 @@ Kernel mode.  The PFN lock is held for some of the tables.
 		//
 
 		COUNT_BALANCE_MAX( (SCHAR)-1 );
-		Table->Root.Balance = (ULONG_PTR)-1;
+		Table->BalancedRoot.Balance = (ULONG_PTR)-1;
 
 		//
 		// Now loop to adjust balance factors and see if any balance operations
@@ -474,7 +475,7 @@ Kernel mode.  The PFN lock is held for some of the tables.
 				// it through here.)
 				//
 
-				if (Table->Root.Balance == 0) {
+				if (Table->BalancedRoot.Balance == 0) {
 					Table->DepthOfTree += 1;
 				}
 
@@ -633,7 +634,7 @@ MiRemoveNode(
 #if defined( _WIN81_ ) || defined ( _WIN10_ )
 	Table->Root->Balance = 0;
 #else
-	Table->Root.Balance = 0;
+	Table->BalancedRoot.Balance = 0;
 #endif
 	P = SANITIZE_PARENT_NODE(EasyDelete->ParentValue);
 
@@ -668,7 +669,7 @@ MiRemoveNode(
 			//
 
 #if !defined( _WIN81_ ) && !defined ( _WIN10_ )
-			if (Table->Root.Balance != 0) {
+			if (Table->BalancedRoot.Balance != 0) {
 				Table->DepthOfTree -= 1;
 			}
 #endif
@@ -814,6 +815,10 @@ MiFindNodeOrParent(
 	PMMVAD_SHORT    VpnCompare;
 	ULONG_PTR       startVpn;
 	ULONG_PTR       endVpn;
+
+	if (Table->Root == NULL) {
+		return TableEmptyTree;
+	}
 
 	NodeToExamine = (PRTL_BALANCED_NODE)GET_VAD_ROOT(Table);
 
