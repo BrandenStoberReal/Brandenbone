@@ -545,9 +545,9 @@ NTSTATUS BBInitDynamicData(IN OUT PDYNAMIC_DATA pData)
 				pData->KExecOpt = 0x283;
 				// EP
 				pData->Protection = 0x87A;
-				pData->EProcessFlags2 = 0x9D4;    // MitigationFlags offset
-				pData->ObjTable = 0x570;
-				pData->VadRoot = 0x7D8;
+				pData->EProcessFlags2 = 0x9d4;    // MitigationFlags offset
+				pData->ObjTable = 0x300;
+				pData->VadRoot = 0x558;
 				// KT
 				pData->PrevMode = 0x232;
 				// ET
@@ -560,6 +560,8 @@ NTSTATUS BBInitDynamicData(IN OUT PDYNAMIC_DATA pData)
 					pData->ExRemoveTable -= 0x34;
 				break;
 			}
+
+			// Windows 11
 			else if (verInfo.dwBuildNumber == 22631)
 			{
 				pData->ver = WINVER_10_23H2;
@@ -567,9 +569,9 @@ NTSTATUS BBInitDynamicData(IN OUT PDYNAMIC_DATA pData)
 				pData->KExecOpt = 0x283;
 				// EP
 				pData->Protection = 0x87A;
-				pData->EProcessFlags2 = 0x9D4;    // MitigationFlags offset
-				pData->ObjTable = 0x570;
-				pData->VadRoot = 0x7D8;
+				pData->EProcessFlags2 = 0x9d4;    // MitigationFlags offset
+				pData->ObjTable = 0x300;
+				pData->VadRoot = 0x558;
 				// KT
 				pData->PrevMode = 0x232;
 				// ET
@@ -586,16 +588,16 @@ NTSTATUS BBInitDynamicData(IN OUT PDYNAMIC_DATA pData)
 			{
 				pData->ver = WINVER_10_24H2;
 				// KP
-				pData->KExecOpt = 0x283;
+				pData->KExecOpt = 0x93;
 				// EP
-				pData->Protection = 0x87A;
-				pData->EProcessFlags2 = 0x9D4;    // MitigationFlags offset
-				pData->ObjTable = 0x570;
-				pData->VadRoot = 0x7D8;
+				pData->Protection = 0x5fa;
+				pData->EProcessFlags2 = 0x754;    // MitigationFlags offset
+				pData->ObjTable = 0x300;
+				pData->VadRoot = 0x558;
 				// KT
 				pData->PrevMode = 0x232;
 				// ET
-				pData->ExitStatus = 0x548;
+				pData->ExitStatus = 0x5d8;
 				// SSDT
 				pData->NtCreateThdExIndex = 0xC1;
 				pData->NtTermThdIndex = 0x53;

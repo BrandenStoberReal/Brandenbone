@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	// Inject the DLL
+	// Inject the DLL, uses Thread
 	status = DriverControl::Instance().InjectDll(pid, dllPath, IT_Thread);
 	if (!NT_SUCCESS(status)) {
 		std::cerr << "Failed to inject DLL. Status: 0x" << std::hex << status << std::endl;
