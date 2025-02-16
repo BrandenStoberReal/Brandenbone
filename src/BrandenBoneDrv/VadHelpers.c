@@ -630,9 +630,9 @@ MiRemoveNode(
 	//
 
 #if defined( _WIN81_ ) || defined ( _WIN10_ )
-	Table->BalancedRoot->u1.Balance = 0;
+	Table->Root->Balance = 0;
 #else
-	Table->BalancedRoot.u1.Balance = 0;
+	Table->Root.Balance = 0;
 #endif
 	P = SANITIZE_PARENT_NODE(EasyDelete->u1.Parent);
 
@@ -758,7 +758,7 @@ TABLE_SEARCH_RESULT
 MiFindNodeOrParent(
 	IN PMM_AVL_TABLE Table,
 	IN ULONG_PTR StartingVpn,
-	OUT PMMADDRESS_NODE* NodeOrParent
+	OUT PRTL_BALANCED_NODE* NodeOrParent
 )
 
 /*++
@@ -808,17 +808,13 @@ MiFindNodeOrParent(
 --*/
 
 {
-	PMMADDRESS_NODE Child;
-	PMMADDRESS_NODE NodeToExamine;
+	PRTL_BALANCED_NODE Child;
+	PRTL_BALANCED_NODE NodeToExamine;
 	PMMVAD_SHORT    VpnCompare;
 	ULONG_PTR       startVpn;
 	ULONG_PTR       endVpn;
 
-	if (Table->NumberGenericTableElements == 0) {
-		return TableEmptyTree;
-	}
-
-	NodeToExamine = (PMMADDRESS_NODE)GET_VAD_ROOT(Table);
+	NodeToExamine = (PRTL_BALANCED_NODE)GET_VAD_ROOT(Table);
 
 	for (;;) {
 		VpnCompare = (PMMVAD_SHORT)NodeToExamine;
@@ -835,7 +831,7 @@ MiFindNodeOrParent(
 		//
 
 		if (StartingVpn < startVpn) {
-			Child = NodeToExamine->LeftChild;
+			Child = NodeToExamine->Left;
 
 			if (Child != NULL) {
 				NodeToExamine = Child;
@@ -860,7 +856,7 @@ MiFindNodeOrParent(
 			return TableFoundNode;
 		}
 		else {
-			Child = NodeToExamine->RightChild;
+			Child = NodeToExamine->Right;
 
 			if (Child != NULL) {
 				NodeToExamine = Child;

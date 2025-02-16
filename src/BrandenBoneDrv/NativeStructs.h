@@ -120,17 +120,6 @@ typedef struct _MITIGATION_FLAGS
 	unsigned int IsolateSecurityDomain;
 } MITIGATION_FLAGS, * PMITIGATION_FLAGS;
 
-typedef union _EXHANDLE
-{
-	struct
-	{
-		int TagBits : 2;
-		int Index : 30;
-	} u;
-	void* GenericHandleOverlay;
-	ULONG_PTR Value;
-} EXHANDLE, * PEXHANDLE;
-
 #pragma warning(disable : 4214 4201)
 
 #pragma pack(push, 1)
@@ -159,36 +148,6 @@ typedef struct _POOL_HEADER // Size=16
 	};
 } POOL_HEADER, * PPOOL_HEADER;
 #pragma pack(pop)
-
-typedef struct _HANDLE_TABLE_ENTRY // Size=16
-{
-	union
-	{
-		ULONG_PTR VolatileLowValue; // Size=8 Offset=0
-		ULONG_PTR LowValue; // Size=8 Offset=0
-		struct _HANDLE_TABLE_ENTRY_INFO* InfoTable; // Size=8 Offset=0
-		struct
-		{
-			ULONG_PTR Unlocked : 1; // Size=8 Offset=0 BitOffset=0 BitCount=1
-			ULONG_PTR RefCnt : 16; // Size=8 Offset=0 BitOffset=1 BitCount=16
-			ULONG_PTR Attributes : 3; // Size=8 Offset=0 BitOffset=17 BitCount=3
-			ULONG_PTR ObjectPointerBits : 44; // Size=8 Offset=0 BitOffset=20 BitCount=44
-		};
-	};
-	union
-	{
-		ULONG_PTR HighValue; // Size=8 Offset=8
-		struct _HANDLE_TABLE_ENTRY* NextFreeHandleEntry; // Size=8 Offset=8
-		union _EXHANDLE LeafHandleValue; // Size=8 Offset=8
-		struct
-		{
-			ULONG GrantedAccessBits : 25; // Size=4 Offset=8 BitOffset=0 BitCount=25
-			ULONG NoRightsUpgrade : 1; // Size=4 Offset=8 BitOffset=25 BitCount=1
-			ULONG Spare : 6; // Size=4 Offset=8 BitOffset=26 BitCount=6
-		};
-	};
-	ULONG TypeInfo; // Size=4 Offset=12
-} HANDLE_TABLE_ENTRY, * PHANDLE_TABLE_ENTRY;
 
 typedef struct _OBJECT_HEADER // Size=56
 {

@@ -178,9 +178,6 @@ RtlImageDirectoryEntryToData(
 );
 
 typedef BOOLEAN(*EX_ENUMERATE_HANDLE_ROUTINE)(
-#if !defined(_WIN7_)
-	IN PHANDLE_TABLE HandleTable,
-#endif
 	IN PHANDLE_TABLE_ENTRY HandleTableEntry,
 	IN HANDLE Handle,
 	IN PVOID EnumParameter

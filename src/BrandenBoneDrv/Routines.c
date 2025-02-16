@@ -16,9 +16,6 @@ LONG g_trIndex = 0;         // Trampoline global index
 PMEM_PHYS_ENTRY BBLookupPhysMemEntry(IN PLIST_ENTRY pList, IN PVOID pBase);
 VOID BBWriteTrampoline(IN PUCHAR place, IN PVOID pfn);
 BOOLEAN BBHandleCallback(
-#if !defined(_WIN7_)
-	IN PHANDLE_TABLE HandleTable,
-#endif
 	IN PHANDLE_TABLE_ENTRY HandleTableEntry,
 	IN HANDLE Handle,
 	IN PVOID EnumParameter
@@ -184,9 +181,6 @@ NTSTATUS BBSetProtection(IN PSET_PROC_PROTECTION pProtection)
 /// <param name="EnumParameter">User context</param>
 /// <returns>TRUE when desired handle is found</returns>
 BOOLEAN BBHandleCallback(
-#if !defined(_WIN7_)
-	IN PHANDLE_TABLE HandleTable,
-#endif
 	IN PHANDLE_TABLE_ENTRY HandleTableEntry,
 	IN HANDLE Handle,
 	IN PVOID EnumParameter
@@ -212,13 +206,6 @@ BOOLEAN BBHandleCallback(
 				);
 		}
 	}
-
-#if !defined(_WIN7_)
-	// Release implicit locks
-	_InterlockedExchangeAdd8((char*)&HandleTableEntry->VolatileLowValue, 1);  // Set Unlocked flag to 1
-	if (HandleTable != NULL && HandleTable->HandleContentionEvent)
-		ExfUnblockPushLock(&HandleTable->HandleContentionEvent, NULL);
-#endif
 
 	return result;
 }

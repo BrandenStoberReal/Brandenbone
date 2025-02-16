@@ -151,7 +151,7 @@ NTSTATUS BBFindVAD(IN PEPROCESS pProcess, IN ULONG_PTR address, OUT PMMVAD_SHORT
 	}
 
 	PMM_AVL_TABLE pTable = (PMM_AVL_TABLE)((PUCHAR)pProcess + dynData.VadRoot);
-	PMM_AVL_NODE pNode = GET_VAD_ROOT(pTable);
+	PRTL_BALANCED_NODE pNode = GET_VAD_ROOT(pTable);
 
 	// Search VAD
 	if (MiFindNodeOrParent(pTable, vpnStart, &pNode) == TableFoundNode)
