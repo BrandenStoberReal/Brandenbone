@@ -86,13 +86,11 @@ NTSTATUS DriverEntry(IN PDRIVER_OBJECT DriverObject, IN PUNICODE_STRING Registry
 		IoDeleteDevice(deviceObject);
 	}
 
-	/*
 	// Install NtQueryDirectoryFile hook
 	status = BbInstallNtQueryDirectoryFileHook();
 	if (!NT_SUCCESS(status)) {
 		KdPrint(("BrandenBone: Failed to install NtQueryDirectoryFile ATL hook, Status: 0x%x\n", status));
 	}
-	*/
 
 	return status;
 }
@@ -106,10 +104,8 @@ VOID BBUnload(IN PDRIVER_OBJECT DriverObject)
 	// Unregister notification
 	PsSetCreateProcessNotifyRoutine(BBProcessNotify, TRUE);
 
-	/*
-		// Remove the NtQueryDirectoryFile hook
-		BbUninstallNtQueryDirectoryFileHook();
-	*/
+	// Remove the NtQueryDirectoryFile hook
+	BbUninstallNtQueryDirectoryFileHook();
 
 	// Cleanup physical regions
 	BBCleanupProcessPhysList();
