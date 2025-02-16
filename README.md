@@ -3,7 +3,7 @@
 ### Windows memory hacking library - now with 100% more Branden
 
 ## Issues
-- Missing EPROCESS/KPROCESS/ETHREAD/KTHREAD offsets for a few versions
+- Missing EPROCESS/KPROCESS/ETHREAD/KTHREAD offsets for a few Windows builds
 - Missing all SSDT offsets
 - Code is half working and half zombified mess
 - Needs major code modernization across the board
