@@ -282,7 +282,7 @@ NTSTATUS BBInitDynamicData(IN OUT PDYNAMIC_DATA pData)
 		if (ver_short != WINVER_81)
 			return STATUS_NOT_SUPPORTED;
 #elif defined (_WIN10_)
-		if (ver_short < WINVER_10 || WINVER_10_20H1 < ver_short)
+		if (ver_short < WINVER_10 || WINVER_10_20H2 < ver_short)
 			return STATUS_NOT_SUPPORTED;
 #endif
 
@@ -476,6 +476,28 @@ NTSTATUS BBInitDynamicData(IN OUT PDYNAMIC_DATA pData)
 			else if (verInfo.dwBuildNumber == 19041)
 			{
 				pData->ver = WINVER_10_20H1;
+				// KP
+				pData->KExecOpt = 0x283;
+				// EP
+				pData->Protection = 0x87A;
+				pData->EProcessFlags2 = 0x9D4;    // MitigationFlags offset
+				pData->ObjTable = 0x570;
+				pData->VadRoot = 0x7D8;
+				// KT
+				pData->PrevMode = 0x232;
+				// ET
+				pData->ExitStatus = 0x548;
+				// SSDT
+				pData->NtCreateThdExIndex = 0xC1;
+				pData->NtTermThdIndex = 0x53;
+				pData->MiAllocPage = 0;
+				if (NT_SUCCESS(BBScanSection("PAGE", (PCUCHAR)"\x48\x83\xC7\x18\x48\x8B\x17", 0xCC, 7, (PVOID)&pData->ExRemoveTable)))
+					pData->ExRemoveTable -= 0x34;
+				break;
+			}
+			else if (verInfo.dwBuildNumber == 19042)
+			{
+				pData->ver = WINVER_10_20H2;
 				// KP
 				pData->KExecOpt = 0x283;
 				// EP
