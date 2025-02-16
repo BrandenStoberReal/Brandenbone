@@ -591,6 +591,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BrandenBoneTest\BrandenBoneTest.vcxproj">
+      <Project>{15f6f215-4a5e-4b57-b0a0-90b067111285}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\BrandenBone\BrandenBone.vcxproj">
       <Project>{a2c53563-46f5-4d87-903f-3f1f2fdb2deb}</Project>
     </ProjectReference>
